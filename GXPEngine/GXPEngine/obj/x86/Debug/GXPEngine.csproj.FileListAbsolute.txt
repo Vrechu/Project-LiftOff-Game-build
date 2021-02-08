@@ -4,3 +4,9 @@ C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftO
 C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.csproj.CoreCompileInputs.cache
 C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.exe
 C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.pdb
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\bin\Debug\GXPEngine.exe
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\bin\Debug\GXPEngine.pdb
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.csprojAssemblyReference.cache
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.csproj.CoreCompileInputs.cache
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.exe
+D:\Files\School\Saxion\Year 1\Term 3\Project - Lift Off\Project-LiftOff-Game-build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.pdb
