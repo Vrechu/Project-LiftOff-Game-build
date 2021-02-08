@@ -48,13 +48,17 @@ public struct Vec2
 		return new Vec2(left.x / right, left.y / right);
 	}
 
-	//calculates the lenght of the vector
+	/// <summary>
+	/// calculates the lenght of the vector
+	/// </summary>
 	public float Length()
 	{
 		return Mathf.Sqrt((this.x * this.x) + (this.y * this.y));
 	}
 
-	//scales the vector length to 1 without changing the direction
+	/// <summary>
+	/// scales the vector length to 1 without changing the direction
+	/// </summary>
 	public void Normalize()
 	{
 		if (Length() == 0)
@@ -66,8 +70,9 @@ public struct Vec2
 			this *= 1 / Length();
 		}
 	}
-
-	//returns a new vector with length 1 in the same direction od the original 
+	/// <summary>
+	/// returns a new vector with length 1 in the same direction od the original 
+	/// </summary>
 	public Vec2 Normalized()
 	{
 		if (Length() != 0)
@@ -87,34 +92,48 @@ public struct Vec2
 		return String.Format("({0},{1})", x, y);
 	}
 
-	//changes the x and y coördinates of the vector
+	/// <summary>
+	/// changes the x and y coördinates of the vector
+	/// </summary>
 	public void SetXY(float _x, float _y)
 	{
 		this.x = _x;
 		this.y = _y;
 	}
 
-	//converts angles from degrees to radians or from radians to degrees
+	/// <summary>
+	/// converts angles from degrees to radians
+	/// </summary>
 	public float Deg2Rad(float _degree)
 	{
 		return (_degree * (Mathf.PI / 180));
 	}
+	/// <summary>
+	/// converts angles from radians to degrees
+	/// </summary>
 	public float Rad2Deg(float _radian)
 	{
 		return (_radian * (180 / Mathf.PI));
 	}
 
-	//returns a vector with length 1 and the specified angle
+	/// <summary>
+	/// returns a vector with length 1 and the specified angle
+	/// </summary>
 	public Vec2 GetUnitVectorDeg(float degree)
 	{
 		return new Vec2(Mathf.Cos(Deg2Rad(degree)), Mathf.Sin(Deg2Rad(degree)));
 	}
+	/// <summary>
+	/// returns a vector with length 1 and the specified angle
+	/// </summary>
 	public Vec2 GetUnitVectorRad(float radian)
 	{
 		return new Vec2(Mathf.Cos(radian), Mathf.Sin(radian));
 	}
 
-	//returns a vector with lenght 1 and a random angle
+	/// <summary>
+	/// returns a vector with lenght 1 and a random angle
+	/// </summary>
 	public Vec2 RandomUnitVector()
 	{
 		float randomAngle;
@@ -128,35 +147,50 @@ public struct Vec2
 		return GetUnitVectorRad(randomAngle);
 	}
 
-	//sets the vector to the specified angle
+	/// <summary>
+	/// sets the vector to the specified angle
+	/// </summary>
 	public void SetAngleRadians(float radian)
 	{
 		var length = Length();
 		SetXY(Mathf.Cos(radian) * length, Mathf.Sin(radian) * length);
 	}
+	/// <summary>
+	/// sets the vector to the specified angle
+	/// </summary>
 	public void SetAngleDegrees(float degree)
 	{
 		var length = Length();
 		SetXY(Mathf.Cos(Deg2Rad(degree)) * length, Mathf.Sin(Deg2Rad(degree)) * length);
 	}
 
-	//returns the angle of the vector
+	/// <summary>
+	/// returns the angle of the vector
+	/// </summary>
 	public float GetAngleDegrees()
 	{
 		return Rad2Deg(Mathf.Atan2(this.y, this.x));
 	}
+	/// <summary>
+	/// returns the angle of the vector
+	/// </summary>
 	public float GetAngleRadians()
 	{
 		return Mathf.Atan2(this.y, this.x);
 	}
 
-	//rotates the vector over the specified angle
+	/// <summary>
+	/// rotates the vector over the specified angle
+	/// </summary>
 	public void RotateDegrees(float degree)
 	{
 		float angleSine = Mathf.Sin(Deg2Rad(degree));
 		float angleCosine = Mathf.Cos(Deg2Rad(degree));
 		SetXY(this.x * angleCosine - this.y * angleSine, this.x * angleSine + this.y * angleCosine);
 	}
+	/// <summary>
+	/// rotates the vector over the specified angle
+	/// </summary>
 	public void RotateRadians(float radian)
 	{
 		float angleSine = Mathf.Sin(radian);
@@ -164,13 +198,18 @@ public struct Vec2
 		SetXY(this.x * angleCosine - this.y * angleSine, this.x * angleSine + this.y * angleCosine);
 	}
 
-	//rotates the vector around the specified point over the specified angle
+	/// <summary>
+	/// rotates the vector around the specified point over the specified angle
+	/// </summary>
 	public void RotateAroundDegrees(Vec2 point, float degree)
 	{
 		this -= point;
 		this.RotateDegrees(degree);
 		this += point;
 	}
+	/// <summary>
+	/// rotates the vector around the specified point over the specified angle
+	/// </summary>
 	public void RotateAroundRadians(Vec2 point, float radian)
 	{
 		this -= point;
@@ -178,13 +217,17 @@ public struct Vec2
 		this += point;
 	}
 
-	//returns the dot product of two vectors
+	/// <summary>
+	/// returns the dot product of two vectors
+	/// </summary>
 	public float Dot(Vec2 other)
 	{
 		return this.x * other.x + this.y * other.y;
 	}
 
-	//returns a normal with length 1 of the vector 
+	/// <summary>
+	/// returns a normal with length 1 of the vector
+	/// </summary>
 	public Vec2 UnitNormal()
 	{
 		Vec2 normal = new Vec2(this.y * -1, this.x);
@@ -192,8 +235,9 @@ public struct Vec2
 		return normal;
 	}
 
-	//changes the vector angle to the reflected version of the angle compared to a different vector
-	//the "bounciness" of the vector is specified with the COR from 0 to 1
+	/// <summary>
+	/// changes the vector angle to the reflected version of the angle compared to a different vector. the "bounciness" of the vector is specified with the COR from 0 to 1
+	/// </summary>
 	public void Reflect(Vec2 other, float COR)
 	{
 		this -= (1 + COR) * (this.Dot(other.UnitNormal())) * other.UnitNormal();
