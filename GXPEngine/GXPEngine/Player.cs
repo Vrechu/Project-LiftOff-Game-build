@@ -6,6 +6,7 @@ using GXPEngine;
 
 class Player
 {
-    
+    Vec2 velocity;
+
 }
 

@@ -1,0 +1,6 @@
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\bin\Debug\GXPEngine.exe
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\bin\Debug\GXPEngine.pdb
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.csprojAssemblyReference.cache
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.csproj.CoreCompileInputs.cache
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.exe
+C:\Users\freek\OneDrive\Bureaublad\Project Lift-Off\Project builds\Project LiftOff Game Build\Project LiftOff Game build\GXPEngine\GXPEngine\obj\x86\Debug\GXPEngine.pdb
