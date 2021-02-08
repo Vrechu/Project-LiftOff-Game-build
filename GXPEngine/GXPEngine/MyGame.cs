@@ -20,6 +20,7 @@ public class MyGame : Game
         AddChild(canvas);
 		//------------------------------------------------end-of-example-code-------------------------
 
+		AddChild(new Player(100,100));
 		AddChild(new Vec2UnitTest());
     }
 
