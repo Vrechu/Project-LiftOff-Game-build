@@ -4,11 +4,11 @@ using GXPEngine;								// GXPEngine contains the engine
 
 public class MyGame : Game
 {
-	public MyGame() : base(800, 600, false)		// Create a window that's 800x600 and NOT fullscreen
+	public MyGame() : base(1920, 1080, false)		// Create a window that's 800x600 and NOT fullscreen
 	{
         //----------------------------------------------------example-code----------------------------
         //create a canvas
-        Canvas canvas = new Canvas(800, 600);
+        Canvas canvas = new Canvas(1, 600);
 
         //add some content
         canvas.graphics.FillRectangle(new SolidBrush(Color.Red), new Rectangle(0, 0, 400, 300));
