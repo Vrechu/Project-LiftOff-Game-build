@@ -7,8 +7,11 @@ using GXPEngine;
 class Shield : Sprite
 {
     Player _player;
-    Vec2 shieldPosition;
-    Vec2 mouseVector;
+    Vec2 shieldDirectionVector;
+
+    float projectileSpawnDistance = 20;
+    Vec2 projectileReflectLocation;
+
     public Shield(Player player) : base("triangle.png")
     {        
         SetOrigin(this.width / 2, 0);
@@ -17,19 +20,41 @@ class Shield : Sprite
 
     void Update()
     {
-        UpdateMouseVector();
+        UpdateShieldDirectionVector();
         UpdateRotation();
-    }
-    void UpdateMouseVector()
-    {
-        mouseVector.SetXY(Input.mouseX - _player.Position.x, Input.mouseY - _player.Position.y);
+        UpdateProjectileReflectLocation();
     }
 
+    // calculates the vector from player tou mouse position
+    void UpdateShieldDirectionVector()
+    {
+        shieldDirectionVector.SetXY(Input.mouseX - _player.Position.x, Input.mouseY - _player.Position.y);
+    }
+
+    // sets the rotation of the shield to face the mouse position
     void UpdateRotation()
     {
-        rotation = mouseVector.GetAngleDegrees() - 90;
+        rotation = shieldDirectionVector.GetAngleDegrees() - 90;
+    }    
+
+   
+    void OnCollision(GameObject other)
+    {
+        if (other is Projectile)
+        {
+            Projectile projectile = other as Projectile;
+            projectile.RotateTowardsDirection(shieldDirectionVector);
+            projectile.SetXY(projectileReflectLocation.x, projectileReflectLocation.y);
+        }
     }
 
+    // calculates the point projectiles move to when reflectinmg.
+    void UpdateProjectileReflectLocation()
+    {
+        projectileReflectLocation = _player.Position + shieldDirectionVector.Normalized() *
+            (this.height + projectileSpawnDistance);
+    }
 
+   
 }
 

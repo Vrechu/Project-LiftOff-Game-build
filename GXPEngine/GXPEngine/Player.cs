@@ -28,7 +28,7 @@ class Player : Sprite
 		SetOrigin(this.width / 2, this.height / 2);
 		_playerPosition.x = px;
 		_playerPosition.y = py;
-		AddChild(new Shield(this));
+		AddChild(new Shield(this));		
 	}
 
 	void Update()
