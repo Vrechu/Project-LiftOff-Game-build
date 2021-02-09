@@ -9,19 +9,17 @@ namespace GXPEngine
     class Enemy : Sprite
     {
         private float moveSpeed = 2f; //The move speed of the enemy
-        private float moveUntilDistance = 200f; //The enemy moves towards a target until this distance away
+        private float moveUntilDistance = 400f; //The enemy moves towards a target until they are this distance away
 
-        private int chargeDuration = 1000; //The time it takes to charge
         private int projectileShotTime; //The last time the enemy shot a projectile
-        private int shotCooldown = 1500; //The cooldown (after shooting) before the enemy can charge again
-        private bool isCharging = false; //Whether the enemy is currently charging
+        private int shotCooldown = 1500; //The cooldown (after shooting) before the enemy can shoot again
 
         private Projectile projectileToCharge; //The projectile that's charging
 
         private Transformable target; //The target the enemy is following
 
         //The position in Vec2
-        private Vec2 position
+        private Vec2 Position
         {
             get
             {
@@ -57,21 +55,15 @@ namespace GXPEngine
         {
             MoveTowards(target); //Move towards the target
 
-            //If the enemy is not charging *and* the cooldown has run out
-            if (!isCharging && Time.now > projectileShotTime + shotCooldown)
+            //If the cooldown has run out
+            if (Time.now > projectileShotTime + shotCooldown)
                 ChargeNewProjectile(); //Charge a new projectile
-            //Otherwise, if a projectile 
-            else if (projectileToCharge != null && !projectileToCharge.IsFired)
-                projectileToCharge.RotateTowardsObject(target);
-            else if (projectileToCharge != null && projectileToCharge.IsFired)
-                isCharging = false;
         }
 
         private void ChargeNewProjectile()
         {
-            isCharging = true;
             projectileShotTime = Time.now;
-            projectileToCharge = new Projectile(this, chargeDuration);
+            projectileToCharge = new Projectile(this.x, this.y, this, target);
             projectileToCharge.RotateTowardsObject(target);
         }
 
@@ -86,10 +78,10 @@ namespace GXPEngine
             //If the distance to the target is large enough to still move
             if (DistanceTo(moveTarget) > moveUntilDistance)
             {
-                Vec2 moveDirection = targetPosition - position; //Calculate the direction to move in
+                Vec2 moveDirection = targetPosition - Position; //Calculate the direction to move in
                 moveDirection.Normalize(); //Normalize the move direction
 
-                position += moveDirection * moveSpeed; //Move 'moveSpeed' units towards the move direction
+                Position += moveDirection * moveSpeed; //Move 'moveSpeed' units towards the move direction
             }
         }
 
@@ -98,7 +90,7 @@ namespace GXPEngine
             if(other is Projectile)
             {
                 Projectile projectile = other as Projectile;
-                if (projectile.IsFired && projectile.HasLeftSource)
+                if (projectile.HasLeftSource)
                 {
                     LateDestroy();
                     projectile.LateDestroy();
