@@ -11,11 +11,10 @@ namespace GXPEngine
         private float moveSpeed = 2f; //The move speed of the enemy
         private float moveUntilDistance = 200f; //The enemy moves towards a target until this distance away
 
-        private int chargeStartTime; //The last time the enemy started charging a projectile
-        private int chargeDuration = 500; //The time it takes to charge
+        private int chargeDuration = 1000; //The time it takes to charge
         private int projectileShotTime; //The last time the enemy shot a projectile
-        private int chargeCooldown = 1000; //The cooldown (after shooting) before the enemy can charge again
-        private bool isCharging; //Whether the enemy is currently charging
+        private int shotCooldown = 1500; //The cooldown (after shooting) before the enemy can charge again
+        private bool isCharging = false; //Whether the enemy is currently charging
 
         private Projectile projectileToCharge; //The projectile that's charging
 
@@ -51,18 +50,29 @@ namespace GXPEngine
             SetOrigin(width / 2, height / 2); //Center the origin of the enemy
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
+            name = "Enemy";
         }
 
         public void Update()
         {
-            MoveTowards(target);
+            MoveTowards(target); //Move towards the target
 
-            //If the enemy is already charging
-            if (isCharging)
-                ChargeCurrentProjectile();
-            //Else if the charge cooldown is done
-            else if (Time.now >= projectileShotTime + chargeCooldown)
-                ChargeNewProjectile();
+            //If the enemy is not charging *and* the cooldown has run out
+            if (!isCharging && Time.now > projectileShotTime + shotCooldown)
+                ChargeNewProjectile(); //Charge a new projectile
+            //Otherwise, if a projectile 
+            else if (projectileToCharge != null && !projectileToCharge.IsFired)
+                projectileToCharge.RotateTowardsObject(target);
+            else if (projectileToCharge != null && projectileToCharge.IsFired)
+                isCharging = false;
+        }
+
+        private void ChargeNewProjectile()
+        {
+            isCharging = true;
+            projectileShotTime = Time.now;
+            projectileToCharge = new Projectile(this, chargeDuration);
+            projectileToCharge.RotateTowardsObject(target);
         }
 
         /// <summary>
@@ -83,47 +93,18 @@ namespace GXPEngine
             }
         }
 
-        /// <summary>
-        /// Start charging a new projectile
-        /// </summary>
-        private void ChargeNewProjectile()
+        public void OnCollision(GameObject other)
         {
-            isCharging = true; //Set state to charging
-
-            projectileToCharge = new Projectile(this); //Spawn a new projectile
-
-            chargeStartTime = Time.now; //Remember at which time the enemy started charging
-
-            projectileToCharge.RotateTowards(target); //Rotate the projectile towards the target
-        }
-
-        /// <summary>
-        /// Continue charging a projectile
-        /// </summary>
-        private void ChargeCurrentProjectile()
-        {
-            projectileToCharge.RotateTowards(target); //Rotate the projectile towards the target
-
-            //If the enemy has charged for a sufficient amount of time
-            if (Time.now >= chargeStartTime + chargeDuration)
-                ShootProjectileTowards(target); //Shoot the projectile
-        }
-
-        /// <summary>
-        /// Shoot the charging projectile towards the target
-        /// </summary>
-        /// <param name="shootTarget">The target to shoot the projectile at</param>
-        private void ShootProjectileTowards(Transformable shootTarget)
-        {
-            isCharging = false; //Set state to not charging
-
-            projectileShotTime = Time.now; //Remember the time the projectile was shot at
-
-            Vec2 targetLocation = new Vec2(shootTarget.x, shootTarget.y); //Get the location of the target as a Vec2
-
-            Vec2 targetRotation = targetLocation - position; //Get the rotation to shoot the projectile in
-
-            projectileToCharge.Shoot(targetRotation); //Shoot the projectile in the target's direction
+            if(other is Projectile)
+            {
+                Projectile projectile = other as Projectile;
+                if (projectile.IsFired && projectile.HasLeftSource)
+                {
+                    LateDestroy();
+                    projectile.LateDestroy();
+                    projectileToCharge.LateDestroy();
+                }
+            }
         }
     }
 }
