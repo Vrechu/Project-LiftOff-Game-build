@@ -4,6 +4,7 @@ using GXPEngine;								// GXPEngine contains the engine
 
 public class MyGame : Game
 {
+	Player player;
 	public MyGame() : base(1920, 1080, false)		// Create a window that's 800x600 and NOT fullscreen
 	{
         //----------------------------------------------------example-code----------------------------
@@ -19,8 +20,8 @@ public class MyGame : Game
         //add canvas to display list
         AddChild(canvas);
 		//------------------------------------------------end-of-example-code-------------------------
-
-		AddChild(new Player(100,100));
+		AddChild(player = new Player(100, 100));
+		AddChild(new Enemy(width, height, player));
 		AddChild(new Vec2UnitTest());
     }
 
