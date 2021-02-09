@@ -15,12 +15,20 @@ class Player : Sprite
 	Vec2 down;
 	Vec2 left;
 	Vec2 right;
+	public Vec2 Position
+	{
+		get
+		{
+			return _playerPosition;
+		}
+	}
 
 	public Player(float px, float py) : base("circle.png")
 	{
 		SetOrigin(this.width / 2, this.height / 2);
 		_playerPosition.x = px;
 		_playerPosition.y = py;
+		AddChild(new Shield(this));
 	}
 
 	void Update()
@@ -30,6 +38,7 @@ class Player : Sprite
 		UpdatePlayerScreenPosition();
 	}
 
+	// processes movement imputs
 	void PlayerMovementInputs()
 	{
 		up.SetXY(0, 0);
@@ -55,6 +64,7 @@ class Player : Sprite
 		}
 	}
 
+	// sets calculates player velocity
 	void PlayerMovement()
 	{
 		_playerDirection = up + down + left + right;
@@ -63,6 +73,7 @@ class Player : Sprite
 		_playerPosition += _playerVelocity;
 	}
 
+	// moves the player
 	void UpdatePlayerScreenPosition()
 	{
 		x = _playerPosition.x;
