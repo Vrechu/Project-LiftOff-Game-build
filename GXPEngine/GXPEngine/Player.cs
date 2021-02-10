@@ -6,15 +6,15 @@ using GXPEngine;
 
 class Player : Sprite
 {
-	Vec2 _playerVelocity;
-	float playerSpeed = 5;
-	Vec2 _playerPosition;
-	Vec2 _playerDirection;
+	private Vec2 _playerPosition;
+	private Vec2 _playerDirection;
+	private float playerSpeed = 5;
+	private Vec2 _playerVelocity;
 
-	Vec2 up;
-	Vec2 down;
-	Vec2 left;
-	Vec2 right;
+	private Vec2 up;
+	private Vec2 down;
+	private Vec2 left;
+	private Vec2 right;
 	public Vec2 Position
 	{
 		get
@@ -79,6 +79,15 @@ class Player : Sprite
 		x = _playerPosition.x;
 		y = _playerPosition.y;
 	}
+
+	void OnCollision(GameObject other)
+	{
+		if (other is Projectile)
+        {
+			other.LateDestroy();
+			GameManager.Singleton.PlayerGetsHit(1);
+        }
+    }
 }
 
 

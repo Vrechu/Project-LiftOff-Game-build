@@ -6,11 +6,10 @@ using GXPEngine;
 
 class Shield : Sprite
 {
-    Player _player;
-    Vec2 shieldDirectionVector;
-
-    float projectileSpawnDistance = 20;
-    Vec2 projectileReflectLocation;
+    private Player _player;
+    private Vec2 shieldDirectionVector;
+    private float projectileSpawnDistance = 20;
+    private Vec2 projectileReflectLocation;
 
     public Shield(Player player) : base("triangle.png")
     {        
@@ -53,8 +52,6 @@ class Shield : Sprite
     {
         projectileReflectLocation = _player.Position + shieldDirectionVector.Normalized() *
             (this.height + projectileSpawnDistance);
-    }
-
-   
+    }   
 }
 
