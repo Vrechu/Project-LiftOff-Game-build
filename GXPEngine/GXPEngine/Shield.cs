@@ -11,9 +11,9 @@ class Shield : Sprite
     private float projectileSpawnDistance = 20;
     private Vec2 projectileReflectLocation;
 
-    public Shield(Player player) : base("triangle.png")
+    public Shield(Player player) : base("shield.png")
     {        
-        SetOrigin(this.width / 2, 0);
+        SetOrigin(0 , height/2);
         _player = player;
     }
 
@@ -33,7 +33,7 @@ class Shield : Sprite
     // sets the rotation of the shield to face the mouse position
     void UpdateRotation()
     {
-        rotation = shieldDirectionVector.GetAngleDegrees() - 90;
+        rotation = shieldDirectionVector.GetAngleDegrees();
     }    
 
    

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-class Player : Sprite
+class Player : AnimationSprite
 {
     private Vec2 _playerPosition;
     private Vec2 _playerDirection;
@@ -24,7 +24,7 @@ class Player : Sprite
         }
     }
 
-    public Player(float px, float py) : base("circle.png")
+    public Player(float px, float py) : base("wizard_walk.png", 6,1,1)
     {
         SetOrigin(this.width / 2, this.height / 2);
         _playerPosition.x = px;
