@@ -22,7 +22,7 @@ class GameManager
     }
 
     private int _maxPlayerHealth = 3;
-    private int _playerHealth;
+    public int _playerHealth;
 
     private GameManager()
     {
