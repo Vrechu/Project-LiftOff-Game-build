@@ -1,8 +1,8 @@
 ﻿namespace GXPEngine
 {
-    class Projectile : Sprite
+    class Projectile : AnimationSprite
     {
-        private float moveSpeed = 5f; //The speed at which the projectile moves
+        protected float moveSpeed = 5f; //The speed at which the projectile moves
         //private float distanceFromSource = 20f; //The distance from its source
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         private GameObject source; //The source object that the projectile came from
@@ -31,7 +31,7 @@
         /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
         /// <param name="newSource">The source the projectile was shot from</param>
         /// <param name="direction">The direction the projectile is being shot at</param>
-        public Projectile(float spawnX, float spawnY, GameObject newSource, Vec2 direction) : base("circle.png")
+        public Projectile(float spawnX, float spawnY, GameObject newSource, Vec2 direction) : base("ProjectileSlow.png", 3, 1)
         {
             Initialize(spawnX, spawnY, newSource);
             RotateTowardsDirection(direction);
@@ -44,7 +44,7 @@
         /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
         /// <param name="newSource">The source the projectile was shot from</param>
         /// <param name="target">The target object the projectile is shot at</param>
-        public Projectile(float spawnX, float spawnY, GameObject newSource, Transformable target) : base("circle.png")
+        public Projectile(float spawnX, float spawnY, GameObject newSource, GameObject target) : base("ProjectileSlow.png", 3, 1)
         {
             Initialize(spawnX, spawnY, newSource);
             RotateTowardsObject(target);
@@ -52,28 +52,28 @@
 
         private void Initialize(float spawnX, float spawnY, GameObject newSource)
         {
-            SetOrigin(width / 2, height /2); //Set the origin
+            SetOrigin(width / 2, height / 2); //Set the origin
             source = newSource; //Set the source
             scale = 0.5f; //Set the scale
             SetXY(spawnX, spawnY); //Set the position
             game.AddChild(this); //Add the projectile to the game
             //chargeDuration = newChargeDuration; //Set the charge duration
 
+            SetCycle(0, 2);
+
             name = "Projectile";
         }
 
-        void Update()
+        public void Update()
         {
             //If the projectile is fired
-                if (!HasLeftSource)
-                    CheckIfLeftSource();
+            if (!HasLeftSource)
+            {
+                CheckIfLeftSource();
+            }
 
-                Move(0, -moveSpeed); //Move in the fired direction
-            //else
-            //{
-            //    //Charge(); //Charge the shot
-            //    SetXY(source.x, source.y); //Otherwise follow the position of the source
-            //}
+            Move(moveSpeed, 0); //Move in the fired direction
+            Animate();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@
         /// <param name="targetRotation">The position to rotate towards</param>
         public void RotateTowardsDirection(Vec2 targetRotation)
         {
-            rotation = targetRotation.GetAngleDegrees() + 90; //Set the rotation
+            rotation = targetRotation.GetAngleDegrees(); //Set the rotation
         }
 
         /// <summary>
