@@ -8,8 +8,8 @@ class EnemySpawnPoint : Sprite
 {
     private Player _player; // target of enemies
 
-    private int _spawnTimer; // countdown timer for spawnting enemies
-    private int _spawnCounterTime = 500; // countdown time
+    private int _lastSpawnTime; // last time enemy spawned
+    private int _spawnTimer = 5; // countdown time in seconds
 
     public EnemySpawnPoint(float px, float py, Player player) : base("circle.png")
     {
@@ -17,7 +17,6 @@ class EnemySpawnPoint : Sprite
         x = px;
         y = py;
         _player = player;
-        _spawnTimer = _spawnCounterTime;
         game.AddChild(this);
     }
 
@@ -28,17 +27,16 @@ class EnemySpawnPoint : Sprite
     
     // spawns an enemy
     public void SpawnEnemy()
-    {
+    {        
         new Enemy(x,y, _player);
     }
 
     //timer for spawning enemies
     public void SpawnTimer()
     {
-        _spawnTimer--;
-        if (_spawnTimer == 0)
+        if (Time.now > _lastSpawnTime + _spawnTimer * 1000)
         {
-            _spawnTimer = _spawnCounterTime;
+            _lastSpawnTime = Time.now;
             SpawnEnemy();
         }
         
