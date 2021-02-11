@@ -8,7 +8,7 @@ using System.Text;
 
 namespace GXPEngine
 {
-    class Enemy : AnimationSprite
+    abstract class Enemy : AnimationSprite
     {
         protected float moveSpeed = 2f; //The move speed of the enemy
         protected float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
