@@ -23,6 +23,8 @@ class GameManager
     private int _maxPlayerHealth = 3;
     public int _playerHealth;
 
+    public int _playerScore;
+
     private GameManager(MyGame myGame)
     {
         _myGame = myGame;
@@ -41,10 +43,6 @@ class GameManager
     public void ResetHealth()
     {
         _playerHealth = _maxPlayerHealth;
-    }
-
-    
-
-    
+    }    
 }
 
