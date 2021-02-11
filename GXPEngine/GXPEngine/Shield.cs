@@ -15,6 +15,7 @@ class Shield : Sprite
     {        
         SetOrigin(0 , height/2);
         _player = player;
+        alpha = 0;
     }
 
     void Update()

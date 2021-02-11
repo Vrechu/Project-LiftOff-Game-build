@@ -86,11 +86,13 @@
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerAnimations.cs" />
     <Compile Include="Projectiles\FastProjectile.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
     <Compile Include="Projectiles\ProjectileLauncher.cs" />
     <Compile Include="Projectiles\SlowProjectile.cs" />
     <Compile Include="Shield.cs" />
+    <Compile Include="ShieldLayer.cs" />
     <Compile Include="Vec2.cs" />
     <Compile Include="Vec2UnitTest.cs" />
   </ItemGroup>

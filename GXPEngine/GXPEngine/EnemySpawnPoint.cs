@@ -28,7 +28,7 @@ class EnemySpawnPoint : Sprite
     // spawns an enemy
     public void SpawnEnemy()
     {        
-        new Enemy(x,y, _player);
+        new SlowEnemy (x,y, _player);
     }
 
     //timer for spawning enemies

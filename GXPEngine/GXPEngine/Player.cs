@@ -10,12 +10,22 @@ class Player : AnimationSprite
     private Vec2 _playerDirection;
     private float playerSpeed = 5;
     private Vec2 _playerVelocity;
-    private float _inertiaCoefficient = 1.2f; 
+    private float _inertiaCoefficient = 1.2f;
 
     private Vec2 up;
     private Vec2 down;
     private Vec2 left;
     private Vec2 right;
+
+    public enum PlayerState
+    {
+        WALKING, IDLE, HURT, DYING
+    }
+    public PlayerState _playerState = PlayerState.IDLE;
+    private PlayerAnimations _playerAnimations;
+    private byte _playerAnimationTime = 30;
+
+
     public Vec2 Position
     {
         get
@@ -24,12 +34,16 @@ class Player : AnimationSprite
         }
     }
 
-    public Player(float px, float py) : base("wizard_walk.png", 6,1,1)
+    public Player(float px, float py) : base("wizard_walk.png", 6, 1, 1)
     {
         SetOrigin(this.width / 2, this.height / 2);
         _playerPosition.x = px;
         _playerPosition.y = py;
         AddChild(new Shield(this));
+        AddChild(_playerAnimations = new PlayerAnimations());
+        alpha = 0;
+        SetPlayerState(PlayerState.IDLE);
+        ShowShieldSprites();
     }
 
     void Update()
@@ -37,7 +51,6 @@ class Player : AnimationSprite
         PlayerMovementInputs();
         PlayerMovement();
         UpdatePlayerScreenPosition();
-        /*PlayerDies();*/
     }
 
     // processes movement imputs
@@ -73,10 +86,12 @@ class Player : AnimationSprite
         _playerDirection.Normalize();
         if (_playerDirection.Length() == 0.0)
         {
+            SetPlayerState(PlayerState.IDLE);
             _playerVelocity = _playerVelocity / _inertiaCoefficient;
         }
         else
         {
+            SetPlayerState(PlayerState.WALKING);
             _playerVelocity = _playerDirection * playerSpeed;
         }
         _playerPosition += _playerVelocity;
@@ -98,14 +113,48 @@ class Player : AnimationSprite
         }
     }
 
-    /*void PlayerDies()
+    public void SetPlayerState(PlayerState playerstate)
     {
-		if (GameManager.Singleton._playerHealth == 0)
+        if (playerstate != _playerState)
         {
-			LateDestroy();
+            _playerState = playerstate;
+            Console.WriteLine(_playerState);
+            switch (_playerState)
+            {
+                case PlayerState.IDLE:
+                    {
+                        _playerAnimations.SetCycle(15, 6, _playerAnimationTime);
+                        break;
+                    }
+                case PlayerState.WALKING:
+                    {
+                        _playerAnimations.SetCycle(14, 6, _playerAnimationTime);
+                        break;
+                    }
+                case PlayerState.HURT:
+                    {
+                        break;
+                    }
+                case PlayerState.DYING:
+                    {
+                        break;
+                    }
+            }
         }
-    }*/
+    }
+
+    public void ShowShieldSprites()
+    {
+        AddChild(new ShieldLayer("Paint_layer_2.png", this, 10));
+        AddChild(new ShieldLayer("Paint_layer_3.png", this, 5));
+        AddChild(new ShieldLayer("Paint_layer_4.png", this, 0));
+        AddChild(new ShieldLayer("Paint_layer_3.png", this, -5));
+        AddChild(new ShieldLayer("Paint_layer_2.png", this, -10));
+        /*setchildindex*/
+    }
 }
+
+
 
 
 
