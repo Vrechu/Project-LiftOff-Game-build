@@ -6,16 +6,15 @@ using GXPEngine;
 
 class GameManager
 {
-
     private static GameManager singleton;
-
+    public static MyGame _myGame;
     public static GameManager Singleton
     {
         get
         {
             if (singleton == null)
             {
-                singleton = new GameManager();
+                singleton = new GameManager(_myGame);
             }
             return singleton;
         }
@@ -24,25 +23,28 @@ class GameManager
     private int _maxPlayerHealth = 3;
     public int _playerHealth;
 
-    private GameManager()
+    private GameManager(MyGame myGame)
     {
+        _myGame = myGame;
         _playerHealth = _maxPlayerHealth;
     }
 
+    //removes the specified amount of health from playerhealth
     public void PlayerGetsHit(int damage)
-    {
-        if (_playerHealth == 0)
-        {
-            GameOver();
-        }
-            _playerHealth -= damage;        
+    {      
+        _playerHealth -= damage;
         _playerHealth = Mathf.Max(0, _playerHealth);
         Console.WriteLine("OUCH! " + _playerHealth);
     }
 
-    public void GameOver()
+    //resets the player health to max health
+    public void ResetHealth()
     {
-        Console.WriteLine("YOU DIED");
+        _playerHealth = _maxPlayerHealth;
     }
+
+    
+
+    
 }
 
