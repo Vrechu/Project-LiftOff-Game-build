@@ -37,8 +37,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="Enemies\FastEnemy.cs" />
+    <Compile Include="Enemies\SlowEnemy.cs" />
     <Compile Include="EnemySpawnPoint.cs" />
-    <Compile Include="Enemy.cs" />
+    <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="LineOfSight.cs" />
     <Compile Include="GameManager.cs" />
@@ -84,7 +86,10 @@
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Projectile.cs" />
+    <Compile Include="Projectiles\FastProjectile.cs" />
+    <Compile Include="Projectiles\Projectile.cs" />
+    <Compile Include="Projectiles\ProjectileLauncher.cs" />
+    <Compile Include="Projectiles\SlowProjectile.cs" />
     <Compile Include="Shield.cs" />
     <Compile Include="Vec2.cs" />
     <Compile Include="Vec2UnitTest.cs" />

@@ -1,4 +1,5 @@
 ﻿using GXPEngine.Core;
+using GXPEngine.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,28 +10,30 @@ namespace GXPEngine
 {
     class Enemy : AnimationSprite
     {
-        private float moveSpeed = 2f; //The move speed of the enemy
-        private float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
-        private int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
+        protected float moveSpeed = 2f; //The move speed of the enemy
+        protected float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
+        protected int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
+        protected int scoreWorth = 1; //The amount of points the enemy is worth
 
-        private byte animationFrameRate = 10; //The amount of frames each animation frame should display for
+        protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
 
-        private int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
-        private int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
-        private int shootFrame = 4; //The frame at which a projectile is shot
+        protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
+        protected int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
+        protected int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
+        protected int shootFrame = 4; //The frame at which a projectile is shot
 
-        private int walkAnimationStartFrame = 7;
-        private int walkAnimationFrameCount = 5;
+        protected int walkAnimationStartFrame = 7;
+        protected int walkAnimationFrameCount = 5;
 
-        private int deathAnimationStartFrame = 12;
-        private int deathAnimationFrameCount = 6;
-        private int deathFrame = 17;
+        protected int deathAnimationStartFrame = 12;
+        protected int deathAnimationFrameCount = 6;
+        protected int deathFrame = 17;
 
         private int projectileShotTime; //The last time the enemy shot a projectile
         private bool isFiring = false;
         private bool isDying = false;
 
-        private Projectile projectileToCharge; //The projectile that's charging
+        private ProjectileLauncher projectileManager; //The projectile that's charging
 
         private GameObject target; //The target the enemy is following
         private LineOfSight lineOfSight;
@@ -49,24 +52,21 @@ namespace GXPEngine
             }
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="spawnX">The X coordinates to spawn the enemy at</param>
-        /// <param name="spawnY">The Y coordinates tp spawn the enemy at</param>
-        /// <param name="newTarget">The target the enemy will follow and shoot at</param>
-        public Enemy(float spawnX, float spawnY, GameObject newTarget) : base("FrogodileGrid.png", 5, 4, 18)
+        public Enemy(string sprite, float spawnX, float spawnY, GameObject newTarget, Projectile projectile) : base(sprite, 5, 4, 18)
         {
-            Initialize(spawnX, spawnY, newTarget);
+            Initialize(spawnX, spawnY, newTarget, projectile);
         }
 
-        private void Initialize(float spawnX, float spawnY, GameObject newTarget)
+        private void Initialize(float spawnX, float spawnY, GameObject newTarget, Projectile projectile)
         {
             SetOrigin(width / 2, height / 2); //Center the origin of the enemy
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
 
             game.AddChild(this);
+
+            projectileManager = new ProjectileLauncher(projectile, this);
+            AddChild(projectileManager);
 
             //Create a new line of sight
             lineOfSight = new LineOfSight(this);
@@ -134,16 +134,16 @@ namespace GXPEngine
             switch (cycle)
             {
                 case 0:
-                    SetCycle(0, 1, animationFrameRate);
+                    SetCycle(0, 1, animationFrameTime);
                     break;
                 case 1:
-                    SetCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameRate);
+                    SetCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
                     break;
                 case 2:
-                    SetCycle(shootAnimationStartFrame, shootAnimationFrameCount, animationFrameRate);
+                    SetCycle(shootAnimationStartFrame, shootAnimationFrameCount, shootAnimationTime);
                     break;
                 case 3:
-                    SetCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameRate);
+                    SetCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameTime);
                     break;
             }
         }
@@ -163,8 +163,7 @@ namespace GXPEngine
         {
             if (currentFrame == shootFrame && Time.now > projectileShotTime + shotCooldown)
             {
-                projectileToCharge = new Projectile(x, y, this, target);
-                projectileToCharge.RotateTowardsObject(target);
+                projectileManager.ShootAt(target);
                 projectileShotTime = Time.now;
             }
 
@@ -205,6 +204,7 @@ namespace GXPEngine
         /// <param name="moveDirection">The direction to move in</param>
         private void MoveInDirection(Vec2 moveDirection)
         {
+            StopFiring();
             SetAnimationCycle(1);
             moveDirection.Normalize();
             Position += moveDirection * moveSpeed; //Move 'moveSpeed' units towards the move direction
@@ -222,6 +222,8 @@ namespace GXPEngine
         private void Die()
         {
             isDying = true;
+            GameManager.Singleton._playerScore += scoreWorth;
+            Console.WriteLine(GameManager.Singleton._playerScore);
         }
 
         private void Dying()

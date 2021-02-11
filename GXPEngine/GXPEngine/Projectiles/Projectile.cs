@@ -1,14 +1,14 @@
-﻿namespace GXPEngine
+﻿using GXPEngine.Core;
+using System.Drawing;
+
+namespace GXPEngine
 {
-    class Projectile : AnimationSprite
+    abstract class Projectile : AnimationSprite
     {
         protected float moveSpeed = 5f; //The speed at which the projectile moves
         //private float distanceFromSource = 20f; //The distance from its source
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
-        private GameObject source; //The source object that the projectile came from
-
-        //private int chargeStartTime; //The time the projectile started charging
-        //private int chargeDuration; //The time it takes for the projectile to charge
+        protected GameObject source; //The source object that the projectile came from
 
         //The position in Vector2
         private Vec2 Position
@@ -31,33 +31,14 @@
         /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
         /// <param name="newSource">The source the projectile was shot from</param>
         /// <param name="direction">The direction the projectile is being shot at</param>
-        public Projectile(float spawnX, float spawnY, GameObject newSource, Vec2 direction) : base("ProjectileSlow.png", 3, 1)
+        public Projectile(string sprite) : base(sprite, 3, 1)
         {
-            Initialize(spawnX, spawnY, newSource);
-            RotateTowardsDirection(direction);
+            Initialize();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="spawnX">The X coordinate to spawn the projectile at</param>
-        /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
-        /// <param name="newSource">The source the projectile was shot from</param>
-        /// <param name="target">The target object the projectile is shot at</param>
-        public Projectile(float spawnX, float spawnY, GameObject newSource, GameObject target) : base("ProjectileSlow.png", 3, 1)
-        {
-            Initialize(spawnX, spawnY, newSource);
-            RotateTowardsObject(target);
-        }
-
-        private void Initialize(float spawnX, float spawnY, GameObject newSource)
+        private void Initialize()
         {
             SetOrigin(width / 2, height / 2); //Set the origin
-            source = newSource; //Set the source
-            scale = 0.5f; //Set the scale
-            SetXY(spawnX, spawnY); //Set the position
-            game.AddChild(this); //Add the projectile to the game
-            //chargeDuration = newChargeDuration; //Set the charge duration
 
             SetCycle(0, 2);
 
@@ -123,5 +104,19 @@
             if (!HitTest(source))
                 HasLeftSource = true;
         }
+
+        public void Spawn(float spawnX, float spawnY)
+        {
+            x = spawnX;
+            y = spawnY;
+            game.AddChild(this);
+        }
+
+        /// <summary>
+        /// Duplicates the current projectile
+        /// </summary>
+        /// <param name="newSource">The source of the projectile</param>
+        /// <returns></returns>
+        public abstract Projectile Duplicate(GameObject newSource);
     }
 }
