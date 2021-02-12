@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-class Player : AnimationSprite
+class Player : Sprite
 {
     private Vec2 _playerPosition;
     private Vec2 _playerDirection;
@@ -21,9 +21,10 @@ class Player : AnimationSprite
     {
         WALKING, IDLE, HURT, DYING
     }
+    
     public PlayerState _playerState = PlayerState.IDLE;
     private PlayerAnimations _playerAnimations;
-    private byte _playerAnimationTime = 30;
+    private byte _playerAnimationTime = 5;
 
 
     public Vec2 Position
@@ -34,7 +35,7 @@ class Player : AnimationSprite
         }
     }
 
-    public Player(float px, float py) : base("wizard_walk.png", 6, 1, 1)
+    public Player(float px, float py) : base("circle.png")
     {
         SetOrigin(this.width / 2, this.height / 2);
         _playerPosition.x = px;
@@ -51,6 +52,7 @@ class Player : AnimationSprite
         PlayerMovementInputs();
         PlayerMovement();
         UpdatePlayerScreenPosition();
+        InvertAnimationSprite();
     }
 
     // processes movement imputs
@@ -115,7 +117,6 @@ class Player : AnimationSprite
 
     public void SetPlayerState(PlayerState playerstate)
     {
-        if (playerstate != _playerState)
         {
             _playerState = playerstate;
             Console.WriteLine(_playerState);
@@ -123,7 +124,7 @@ class Player : AnimationSprite
             {
                 case PlayerState.IDLE:
                     {
-                        _playerAnimations.SetCycle(15, 6, _playerAnimationTime);
+                        _playerAnimations.SetCycle(14, 1, _playerAnimationTime);
                         break;
                     }
                 case PlayerState.WALKING:
@@ -140,6 +141,17 @@ class Player : AnimationSprite
                         break;
                     }
             }
+        }
+    }
+
+    private void InvertAnimationSprite()
+    {
+        if (_playerDirection.x > 0)
+        {
+            _playerAnimations.width =  100;
+        }else if (_playerDirection.x < 0)
+        {
+            _playerAnimations.width = -100;
         }
     }
 
