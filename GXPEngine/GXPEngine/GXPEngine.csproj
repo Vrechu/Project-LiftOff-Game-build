@@ -37,11 +37,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="Enemies\EnemyAnimation.cs" />
     <Compile Include="Enemies\FastEnemy.cs" />
     <Compile Include="Enemies\SlowEnemy.cs" />
     <Compile Include="EnemySpawnPoint.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="Button.cs" />
+    <Compile Include="HUD.cs" />
     <Compile Include="LineOfSight.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />

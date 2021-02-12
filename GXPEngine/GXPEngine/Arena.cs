@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ class Arena : Sprite
         new EnemySpawnPoint(width-120, 280, _player);
         new EnemySpawnPoint(120,height, _player);
         new EnemySpawnPoint(width-120, height, _player);
+        AddChild(new HUD(game.width, game.height));
     }
 }
 

@@ -10,12 +10,16 @@ namespace GXPEngine
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
 
+        private int shootAnimationStartFrame = 0;
+        private int shootAnimationFrameCount = 2;
+
         //The position in Vector2
         private Vec2 Position
         {
             get
             {
-                return new Vec2(x, y);
+                Vector2 newVector = TransformPoint(0, 0);
+                return new Vec2(newVector.x, newVector.y);
             }
             set
             {
@@ -40,7 +44,7 @@ namespace GXPEngine
         {
             SetOrigin(width / 2, height / 2); //Set the origin
 
-            SetCycle(0, 2);
+            SetCycle(shootAnimationStartFrame, shootAnimationFrameCount);
 
             name = "Projectile";
         }
@@ -88,11 +92,14 @@ namespace GXPEngine
         /// Rotates the projectile towards a scertain object
         /// </summary>
         /// <param name="target">The object to rotate towards</param>
-        public void RotateTowardsObject(Transformable target)
+        public void RotateTowardsObject(GameObject target)
         {
-            Vec2 targetPosition = new Vec2(target.x, target.y); //Get the position of the target
-            Vec2 targetRotation = targetPosition - Position; //Get the rotation to rotate towards
-            RotateTowardsDirection(targetRotation); //Rotate towards the designated position
+            Vector2 tempPosition = target.TransformPoint(0, 0); //Get the position of the target as a Vec2
+            Vec2 targetPosition = new Vec2(tempPosition.x, tempPosition.y);
+            Vec2 moveDirection = targetPosition - Position; //Calculate the direction to move in
+            moveDirection.Normalize(); //Normalize the move direction
+
+            RotateTowardsDirection(moveDirection); //Rotate towards the designated position
         }
 
         /// <summary>

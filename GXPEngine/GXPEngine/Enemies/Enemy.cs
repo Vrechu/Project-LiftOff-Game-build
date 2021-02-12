@@ -1,9 +1,11 @@
 ﻿using GXPEngine.Core;
+using GXPEngine.Enemies;
 using GXPEngine.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace GXPEngine
@@ -34,6 +36,7 @@ namespace GXPEngine
         private bool isDying = false;
 
         private ProjectileLauncher projectileManager; //The projectile that's charging
+        private EnemyAnimation enemyAnimation;
 
         private GameObject target; //The target the enemy is following
         private LineOfSight lineOfSight;
@@ -43,7 +46,8 @@ namespace GXPEngine
         {
             get
             {
-                return new Vec2(x, y);
+                Vector2 newVector = TransformPoint(0, 0);
+                return new Vec2(newVector.x, newVector.y);
             }
             set
             {
@@ -52,16 +56,20 @@ namespace GXPEngine
             }
         }
 
-        public Enemy(string sprite, float spawnX, float spawnY, GameObject newTarget, Projectile projectile) : base(sprite, 5, 4, 18)
+        public Enemy(string sprite, float spawnX, float spawnY, int cols, int rows, GameObject newTarget, Projectile projectile) : base(sprite, cols, rows, 1)
         {
-            Initialize(spawnX, spawnY, newTarget, projectile);
+            Initialize(sprite, spawnX, spawnY, cols, rows, newTarget, projectile);
         }
 
-        private void Initialize(float spawnX, float spawnY, GameObject newTarget, Projectile projectile)
+        private void Initialize(string sprite, float spawnX, float spawnY, int cols, int rows, GameObject newTarget, Projectile projectile)
         {
+            alpha = 0;
             SetOrigin(width / 2, height / 2); //Center the origin of the enemy
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
+
+            enemyAnimation = new EnemyAnimation(sprite, cols, rows);
+            AddChild(enemyAnimation);
 
             game.AddChild(this);
 
@@ -83,7 +91,7 @@ namespace GXPEngine
             }
             else
             {
-                lineOfSight.SetRotation(RotationTowards(target)); //Rotate the line of sight towards the target
+                lineOfSight.RotateTowards(RotationTowards(target)); //Rotate the line of sight towards the target
                 lineOfSight.SetLength(DistanceTo(target)); //Set the length of the line of sight to match the distance between the enemy and target
 
                 //If the line of sight is colliding with an enemy that's not its source
@@ -103,7 +111,7 @@ namespace GXPEngine
                 }
                 else
                 {
-                    SetAnimationCycle(0);
+                    enemyAnimation.SetAnimationCycle(0, 1, animationFrameTime);
                 }
 
                 //If the cooldown has run out
@@ -121,36 +129,11 @@ namespace GXPEngine
                     FaceDirection(true);
                 }
             }
-
-            Animate();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="cycle">0 = standing. 1 = walking. 2 = shooting. 3 = death.</param>
-        private void SetAnimationCycle(int cycle)
-        {
-            switch (cycle)
-            {
-                case 0:
-                    SetCycle(0, 1, animationFrameTime);
-                    break;
-                case 1:
-                    SetCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
-                    break;
-                case 2:
-                    SetCycle(shootAnimationStartFrame, shootAnimationFrameCount, shootAnimationTime);
-                    break;
-                case 3:
-                    SetCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameTime);
-                    break;
-            }
         }
 
         private void StartFiring()
         {
-            SetAnimationCycle(2);
+            enemyAnimation.SetAnimationCycle(shootAnimationStartFrame, shootAnimationFrameCount, shootAnimationTime);
             isFiring = true;
         }
 
@@ -161,13 +144,13 @@ namespace GXPEngine
 
         private void ChargeShot()
         {
-            if (currentFrame == shootFrame && Time.now > projectileShotTime + shotCooldown)
+            if (enemyAnimation.currentFrame == shootFrame && Time.now > projectileShotTime + shotCooldown)
             {
                 projectileManager.ShootAt(target);
                 projectileShotTime = Time.now;
             }
 
-            if (currentFrame == shootAnimationStartFrame + shootAnimationFrameCount - 1)
+            if (enemyAnimation.currentFrame == shootAnimationStartFrame + shootAnimationFrameCount - 1)
             {
                 StopFiring();
             }
@@ -179,8 +162,8 @@ namespace GXPEngine
         /// <param name="moveTarget">The target to move towards</param>
         private Vec2 RotationTowards(Transformable moveTarget)
         {
-            Vec2 targetPosition = new Vec2(moveTarget.x, moveTarget.y); //Get the position of the target as a Vec2
-
+            Vector2 tempPosotion = moveTarget.TransformPoint(0, 0); //Get the position of the target as a Vec2
+            Vec2 targetPosition = new Vec2(tempPosotion.x, tempPosotion.y);
             Vec2 moveDirection = targetPosition - Position; //Calculate the direction to move in
             moveDirection.Normalize(); //Normalize the move direction
 
@@ -205,7 +188,7 @@ namespace GXPEngine
         private void MoveInDirection(Vec2 moveDirection)
         {
             StopFiring();
-            SetAnimationCycle(1);
+            enemyAnimation.SetAnimationCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
             moveDirection.Normalize();
             Position += moveDirection * moveSpeed; //Move 'moveSpeed' units towards the move direction
         }
@@ -214,8 +197,8 @@ namespace GXPEngine
         {
             switch (faceLeft)
             {
-                case true: width = Mathf.Abs(width); break;
-                case false: width = -Mathf.Abs(width); break;
+                case true: enemyAnimation.width = Mathf.Abs(enemyAnimation.width); break;
+                case false: enemyAnimation.width = -Mathf.Abs(enemyAnimation.width); break;
             }
         }
 
@@ -228,8 +211,8 @@ namespace GXPEngine
 
         private void Dying()
         {
-            SetAnimationCycle(3);
-            if (currentFrame == deathFrame)
+            enemyAnimation.SetAnimationCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameTime);
+            if (enemyAnimation.currentFrame == deathFrame)
             {
                 LateDestroy();
             }
@@ -246,7 +229,7 @@ namespace GXPEngine
                     projectile.LateDestroy();
                 }
             }
-            else if (other is Enemy)
+            else if (other is Enemy && !isDying)
             {
                 Vec2 newRotation = RotationTowards(other);
                 newRotation.RotateDegrees(180);

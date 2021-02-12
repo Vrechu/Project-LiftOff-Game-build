@@ -37,7 +37,7 @@ namespace GXPEngine
         /// Set the rotation of the line of sight
         /// </summary>
         /// <param name="targetRotation">The rotation to set it at</param>
-        public void SetRotation(Vec2 targetRotation)
+        public void RotateTowards(Vec2 targetRotation)
         {
             rotation = targetRotation.GetAngleDegrees() + 90;
         }
@@ -53,7 +53,7 @@ namespace GXPEngine
 
         public void OnCollision(GameObject other)
         {
-            if(other is Enemy && other != source)
+            if(other is Enemy && other != source && other.parent != source)
             {
                 CollidingWithEnemy = true;
             }

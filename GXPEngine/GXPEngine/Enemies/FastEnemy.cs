@@ -8,7 +8,7 @@ namespace GXPEngine.Enemies
 {
     class FastEnemy : Enemy
     {
-        public FastEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyFast.png", spawnX, spawnY, newTarget, new FastProjectile())
+        public FastEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyFast.png", spawnX, spawnY, 5, 4, newTarget, new FastProjectile())
         {
             moveSpeed = 2f;
             distanceFromTarget = 400f;
