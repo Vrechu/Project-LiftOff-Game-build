@@ -7,15 +7,15 @@ using GXPEngine;
 class Arena : Sprite
 {
     Player _player;
-    public Arena(Game myGame) : base("arena.png")
+    public Arena(Game myGame) : base("Arenav2.png")
     {
         width = myGame.width;
         height = myGame.height;
         AddChild(_player = new Player(width / 2, height / 2));
-        new EnemySpawnPoint(width, height / 2, _player);
-        new EnemySpawnPoint(0, height / 2, _player);
-        new EnemySpawnPoint(width / 2, 0, _player);
-        new EnemySpawnPoint(width / 2, height, _player);
+        new EnemySpawnPoint(120,280, _player);
+        new EnemySpawnPoint(width-120, 280, _player);
+        new EnemySpawnPoint(120,height, _player);
+        new EnemySpawnPoint(width-120, height, _player);
     }
 }
 
