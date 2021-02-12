@@ -98,6 +98,7 @@ public class MyGame : Game
 			_screenState = ScreenState.MENU;
 			loadScreens();
 			_gameManager.ResetHealth();
+			_gameManager.ResetScore();
 		}
 	}
 }

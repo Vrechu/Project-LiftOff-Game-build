@@ -24,8 +24,8 @@ class Player : Sprite
     
     public PlayerState _playerState = PlayerState.IDLE;
     private PlayerAnimations _playerAnimations;
-    private byte _playerAnimationTime = 5;
-
+    private byte _playerAnimationTime = 10;
+    private float _shieldSpriteOffset = 8;
 
     public Vec2 Position
     {
@@ -115,6 +115,7 @@ class Player : Sprite
         }
     }
 
+    //sets the playerstate and selects the proper animation to play.
     public void SetPlayerState(PlayerState playerstate)
     {
         {
@@ -144,6 +145,7 @@ class Player : Sprite
         }
     }
 
+    //inverts the animationsprite depending on the direction the player is walking.
     private void InvertAnimationSprite()
     {
         if (_playerDirection.x > 0)
@@ -155,14 +157,15 @@ class Player : Sprite
         }
     }
 
+
+    //loads the shield sprites
     public void ShowShieldSprites()
     {
-        AddChild(new ShieldLayer("Paint_layer_2.png", this, 10));
-        AddChild(new ShieldLayer("Paint_layer_3.png", this, 5));
+        AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset *2));
+        AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset));
         AddChild(new ShieldLayer("Paint_layer_4.png", this, 0));
-        AddChild(new ShieldLayer("Paint_layer_3.png", this, -5));
-        AddChild(new ShieldLayer("Paint_layer_2.png", this, -10));
-        /*setchildindex*/
+        AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset * -1));
+        AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset * -2));
     }
 }
 

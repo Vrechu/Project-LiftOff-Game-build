@@ -43,6 +43,11 @@ class GameManager
     public void ResetHealth()
     {
         _playerHealth = _maxPlayerHealth;
-    }    
+    }
+    
+    public void ResetScore()
+    {
+        _playerScore = 0;
+    }
 }
 
