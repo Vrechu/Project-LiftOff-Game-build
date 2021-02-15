@@ -8,7 +8,7 @@ namespace GXPEngine
 {
     class SlowEnemy : Enemy
     {
-        public SlowEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemySlow.png", spawnX, spawnY, 5, 4, newTarget, new SlowProjectile())
+        public SlowEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemySlow.png", "EnemyDefaultHitbox.png", spawnX, spawnY, 5, 4, 0, -30, newTarget, new SlowProjectile())
         {
             moveSpeed = 2f;
             distanceFromTarget = 400f;

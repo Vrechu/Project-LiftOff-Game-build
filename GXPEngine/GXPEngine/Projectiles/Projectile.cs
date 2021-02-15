@@ -1,17 +1,19 @@
 ﻿using GXPEngine.Core;
 using System.Drawing;
+using System.Security.Policy;
 
 namespace GXPEngine
 {
-    abstract class Projectile : AnimationSprite
+    abstract class Projectile : Sprite
     {
         protected float moveSpeed = 5f; //The speed at which the projectile moves
-        //private float distanceFromSource = 20f; //The distance from its source
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
 
         private int shootAnimationStartFrame = 0;
         private int shootAnimationFrameCount = 2;
+
+        private AnimationSprite projectileAnimation;
 
         //The position in Vector2
         private Vec2 Position
@@ -35,16 +37,24 @@ namespace GXPEngine
         /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
         /// <param name="newSource">The source the projectile was shot from</param>
         /// <param name="direction">The direction the projectile is being shot at</param>
-        public Projectile(string sprite) : base(sprite, 3, 1)
+        public Projectile(string sprite, int spriteCols, int spriteRows, string hitboxSprite, int hitboxXOffset, int hitboxYOffset) : base(hitboxSprite)
         {
-            Initialize();
+            Initialize(sprite, spriteCols, spriteRows, hitboxXOffset, hitboxYOffset);
         }
 
-        private void Initialize()
+        private void Initialize(string sprite, int spriteCols, int spriteRows, int hitboxXOffset, int hitboxYOffset)
         {
-            SetOrigin(width / 2, height / 2); //Set the origin
+            color = 0x00ff06;
+            alpha = 0;
 
-            SetCycle(shootAnimationStartFrame, shootAnimationFrameCount);
+            SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Set the origin
+
+            projectileAnimation = new AnimationSprite(sprite, spriteCols, spriteRows);
+            projectileAnimation.SetOrigin(width / 2, height / 2);
+
+            projectileAnimation.SetCycle(shootAnimationStartFrame, shootAnimationFrameCount);
+
+            AddChild(projectileAnimation);
 
             name = "Projectile";
         }
@@ -58,26 +68,8 @@ namespace GXPEngine
             }
 
             Move(moveSpeed, 0); //Move in the fired direction
-            Animate();
+            projectileAnimation.Animate();
         }
-
-        /// <summary>
-        /// Start charging the projectile
-        /// </summary>
-        //private void StartCharging()
-        //{
-        //    chargeStartTime = Time.now; //Set the time the projectile started charging
-        //}
-
-        /// <summary>
-        /// Charge the projectile
-        /// </summary>
-        //private void Charge()
-        //{
-        //    //If enough time has passed
-        //    if (Time.now >= chargeStartTime + chargeDuration)
-        //        Shoot(); //Shoot the projectile
-        //}
 
         /// <summary>
         /// Rotates the projectile towards a certain position
@@ -125,5 +117,10 @@ namespace GXPEngine
         /// <param name="newSource">The source of the projectile</param>
         /// <returns></returns>
         public abstract Projectile Duplicate(GameObject newSource);
+
+        public void Hit()
+        {
+
+        }
     }
 }

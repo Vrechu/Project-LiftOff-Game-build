@@ -7,7 +7,7 @@ namespace GXPEngine.Enemies
 {
     class EnemyAnimation : AnimationSprite
     {
-        public EnemyAnimation(string sprite, int cols, int rows) : base(sprite, cols, rows)
+        public EnemyAnimation(string sprite, int cols, int rows) : base(sprite, cols, rows, addCollider:false)
         {
             Initialize();
         }

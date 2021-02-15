@@ -10,7 +10,7 @@ using System.Text;
 
 namespace GXPEngine
 {
-    abstract class Enemy : AnimationSprite
+    abstract class Enemy : Sprite
     {
         protected float moveSpeed = 2f; //The move speed of the enemy
         protected float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
@@ -56,15 +56,17 @@ namespace GXPEngine
             }
         }
 
-        public Enemy(string sprite, float spawnX, float spawnY, int cols, int rows, GameObject newTarget, Projectile projectile) : base(sprite, cols, rows, 1)
+        public Enemy(string enemySprite, string hitboxSprite, float spawnX, float spawnY, int cols, int rows, int hitboxXOffset, int hitboxYOffset, GameObject newTarget, Projectile projectile) : base(hitboxSprite)
         {
-            Initialize(sprite, spawnX, spawnY, cols, rows, newTarget, projectile);
+            Initialize(enemySprite, spawnX, spawnY, cols, rows, hitboxXOffset, hitboxYOffset, newTarget, projectile);
         }
 
-        private void Initialize(string sprite, float spawnX, float spawnY, int cols, int rows, GameObject newTarget, Projectile projectile)
+        private void Initialize(string sprite, float spawnX, float spawnY, int cols, int rows, int hitboxXOffset, int hitboxYOffset, GameObject newTarget, Projectile projectile)
         {
-            alpha = 0;
-            SetOrigin(width / 2, height / 2); //Center the origin of the enemy
+            color = 0x00ff06;
+            alpha = 1;
+
+            SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Center the origin of the enemy
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
 
