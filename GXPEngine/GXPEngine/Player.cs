@@ -35,7 +35,7 @@ class Player : Sprite
         }
     }
 
-    public Player(float px, float py) : base("circle.png")
+    public Player(float px, float py) : base("square.png")
     {
         SetOrigin(this.width / 2, this.height / 2);
         _playerPosition.x = px;
@@ -53,6 +53,7 @@ class Player : Sprite
         PlayerMovement();
         UpdatePlayerScreenPosition();
         InvertAnimationSprite();
+        RevertPlayerHurt();
     }
 
     // processes movement imputs
@@ -88,12 +89,18 @@ class Player : Sprite
         _playerDirection.Normalize();
         if (_playerDirection.Length() == 0.0)
         {
-            SetPlayerState(PlayerState.IDLE);
+            if (_playerState != PlayerState.HURT)
+            {
+                SetPlayerState(PlayerState.IDLE);
+            }
             _playerVelocity = _playerVelocity / _inertiaCoefficient;
         }
         else
         {
-            SetPlayerState(PlayerState.WALKING);
+            if (_playerState != PlayerState.HURT)
+            {
+                SetPlayerState(PlayerState.WALKING);
+            }
             _playerVelocity = _playerDirection * playerSpeed;
         }
         _playerPosition += _playerVelocity;
@@ -108,10 +115,13 @@ class Player : Sprite
 
     void OnCollision(GameObject other)
     {
-        if (other is Projectile)
+        if (_playerState != PlayerState.HURT 
+            && (other is Projectile 
+            || other is Enemy))
         {
             other.LateDestroy();
             GameManager.Singleton.PlayerGetsHit(1);
+            SetPlayerState(PlayerState.HURT);
         }
     }
 
@@ -120,7 +130,6 @@ class Player : Sprite
     {
         {
             _playerState = playerstate;
-            Console.WriteLine(_playerState);
             switch (_playerState)
             {
                 case PlayerState.IDLE:
@@ -135,6 +144,7 @@ class Player : Sprite
                     }
                 case PlayerState.HURT:
                     {
+                        _playerAnimations.SetCycle(7, 4, _playerAnimationTime);
                         break;
                     }
                 case PlayerState.DYING:
@@ -166,6 +176,18 @@ class Player : Sprite
         AddChild(new ShieldLayer("Paint_layer_4.png", this, 0));
         AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset * -1));
         AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset * -2));
+    }
+
+
+    // reverts the playerstate to idle after the hurt animation is finished
+    private void RevertPlayerHurt()
+    {
+        if (_playerState == PlayerState.HURT
+            && _playerAnimations.currentFrame == 10)
+        {
+            Console.WriteLine(_playerState);
+            SetPlayerState(PlayerState.IDLE);
+        }
     }
 }
 
