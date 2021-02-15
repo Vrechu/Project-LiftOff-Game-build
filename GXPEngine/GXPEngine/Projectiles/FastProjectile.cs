@@ -7,7 +7,7 @@ namespace GXPEngine.Projectiles
 {
     class FastProjectile : Projectile
     {
-        public FastProjectile() : base("ProjectileFast.png", 3, 1, "ProjectileFastHitbox.png", 0, -22)
+        public FastProjectile() : base("ProjectileFast.png", 3, 1, "ProjectileFastHitbox.png", 0, 22)
         {
             moveSpeed = 10f;
         }

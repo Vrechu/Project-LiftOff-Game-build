@@ -8,12 +8,18 @@ namespace GXPEngine.Enemies
 {
     class FastEnemy : Enemy
     {
-        public FastEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyFast.png", "EnemyDefaultHitbox.png", spawnX, spawnY, 5, 4, 0, -30, newTarget, new FastProjectile())
+        public FastEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyDefaultHitbox.png", spawnX, spawnY, newTarget)
         {
             moveSpeed = 2f;
             distanceFromTarget = 400f;
             shotCooldown = 2000;
             scoreWorth = 2;
+
+            hitboxXOffset = 0;
+            hitboxYOffset = -30;
+
+            projectileLauncherXOffset = 32;
+            projectileLauncherYOffset = 15;
 
             animationFrameTime = 10; //The amount of frames each animation frame should display for
 
@@ -28,6 +34,10 @@ namespace GXPEngine.Enemies
             deathAnimationStartFrame = 12;
             deathAnimationFrameCount = 6;
             deathFrame = 17;
+
+            SetHitbox(hitboxXOffset, hitboxYOffset);
+            SetAnimation("EnemyFast.png", 5, 4);
+            SetProjectileLauncher(projectileLauncherXOffset, projectileLauncherYOffset, new FastProjectile());
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GXPEngine.Projectiles
 {
-    class ProjectileLauncher : GameObject
+    class ProjectileLauncher : Sprite
     {
         private Projectile projectileToLaunch; //The projectile to shoot
         GameObject source; //The source to shoot from
@@ -16,13 +16,15 @@ namespace GXPEngine.Projectiles
         /// </summary>
         /// <param name="newProjectileToLaunch">The projectile to launch</param>
         /// <param name="newSource">The source to shoot from</param>
-        public ProjectileLauncher(Projectile newProjectileToLaunch, GameObject newSource) : base(false)
+        public ProjectileLauncher(Projectile newProjectileToLaunch, GameObject newSource) : base("square.png", false)
         {
             Initialize(newProjectileToLaunch, newSource);
         }
 
         private void Initialize(Projectile newProjectileToLaunch, GameObject newSource)
         {
+            alpha = 0;
+            SetOrigin(width / 2, height / 2);
             projectileToLaunch = newProjectileToLaunch;
             source = newSource;
         }

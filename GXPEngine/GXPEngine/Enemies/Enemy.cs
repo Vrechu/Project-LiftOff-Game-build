@@ -17,6 +17,12 @@ namespace GXPEngine
         protected int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
         protected int scoreWorth = 1; //The amount of points the enemy is worth
 
+        protected int hitboxXOffset = 0;
+        protected int hitboxYOffset = 0;
+
+        protected int projectileLauncherXOffset = 0;
+        protected int projectileLauncherYOffset = 0;
+
         protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
 
         protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
@@ -56,33 +62,52 @@ namespace GXPEngine
             }
         }
 
-        public Enemy(string enemySprite, string hitboxSprite, float spawnX, float spawnY, int cols, int rows, int hitboxXOffset, int hitboxYOffset, GameObject newTarget, Projectile projectile) : base(hitboxSprite)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="hitboxSprite">The sprite of the hitbox</param>
+        /// <param name="spawnX">The X coordinate to spawn at</param>
+        /// <param name="spawnY">The Y coordinate to spawn at</param>
+        /// <param name="newTarget">The target of the enemy</param>
+        public Enemy(string hitboxSprite, float spawnX, float spawnY, GameObject newTarget) : base(hitboxSprite)
         {
-            Initialize(enemySprite, spawnX, spawnY, cols, rows, hitboxXOffset, hitboxYOffset, newTarget, projectile);
+            Initialize(spawnX, spawnY, newTarget);
         }
 
-        private void Initialize(string sprite, float spawnX, float spawnY, int cols, int rows, int hitboxXOffset, int hitboxYOffset, GameObject newTarget, Projectile projectile)
+        private void Initialize(float spawnX, float spawnY, GameObject newTarget)
         {
             color = 0x00ff06;
-            alpha = 1;
+            alpha = 0;
 
-            SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Center the origin of the enemy
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
 
-            enemyAnimation = new EnemyAnimation(sprite, cols, rows);
-            AddChild(enemyAnimation);
-
             game.AddChild(this);
-
-            projectileManager = new ProjectileLauncher(projectile, this);
-            AddChild(projectileManager);
 
             //Create a new line of sight
             lineOfSight = new LineOfSight(this);
             AddChild(lineOfSight);
 
             name = "Enemy";
+        }
+
+        protected void SetHitbox(int hitboxXOffset, int hitboxYOffset)
+        {
+            Vector2 hitboxOffset = new Vector2(hitboxXOffset / scale, hitboxYOffset * scale);
+            SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Center the origin of the enemy
+        }
+
+        protected void SetProjectileLauncher(int projectileXOffset, int projectileYOffset, Projectile projectile)
+        {
+            projectileManager = new ProjectileLauncher(projectile, this);
+            projectileManager.SetXY(-projectileXOffset, projectileYOffset);
+            enemyAnimation.AddChild(projectileManager);
+        }
+
+        protected void SetAnimation(string sprite, int cols, int rows)
+        {
+            enemyAnimation = new EnemyAnimation(sprite, cols, rows);
+            AddChild(enemyAnimation);
         }
 
         public void Update()
@@ -228,7 +253,7 @@ namespace GXPEngine
                 if (projectile.HasLeftSource)
                 {
                     Die();
-                    projectile.LateDestroy();
+                    projectile.StartExploding();
                 }
             }
             else if (other is Enemy && !isDying)

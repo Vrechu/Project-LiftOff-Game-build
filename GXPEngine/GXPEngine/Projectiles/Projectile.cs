@@ -7,11 +7,18 @@ namespace GXPEngine
     abstract class Projectile : Sprite
     {
         protected float moveSpeed = 5f; //The speed at which the projectile moves
+
+        protected int shootAnimationStartFrame = 0;
+        protected int shootAnimationFrameCount = 2;
+
+        protected int explosionAnimationFrame = 2;
+
+        private bool isExploding = false;
+        private int explosionStartTime;
+        private int explosionDuration = 200;
+
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
-
-        private int shootAnimationStartFrame = 0;
-        private int shootAnimationFrameCount = 2;
 
         private AnimationSprite projectileAnimation;
 
@@ -47,10 +54,10 @@ namespace GXPEngine
             color = 0x00ff06;
             alpha = 0;
 
-            SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Set the origin
+            SetOrigin(width / 2, height / 2); //Set the origin
 
             projectileAnimation = new AnimationSprite(sprite, spriteCols, spriteRows);
-            projectileAnimation.SetOrigin(width / 2, height / 2);
+            projectileAnimation.SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset);
 
             projectileAnimation.SetCycle(shootAnimationStartFrame, shootAnimationFrameCount);
 
@@ -67,7 +74,15 @@ namespace GXPEngine
                 CheckIfLeftSource();
             }
 
-            Move(moveSpeed, 0); //Move in the fired direction
+            if (isExploding)
+            {
+                WhileExploding();
+            }
+            else
+            {
+                Move(moveSpeed, 0); //Move in the fired direction
+            }
+
             projectileAnimation.Animate();
         }
 
@@ -77,7 +92,10 @@ namespace GXPEngine
         /// <param name="targetRotation">The position to rotate towards</param>
         public void RotateTowardsDirection(Vec2 targetRotation)
         {
-            rotation = targetRotation.GetAngleDegrees(); //Set the rotation
+            if (!isExploding)
+            {
+                rotation = targetRotation.GetAngleDegrees(); //Set the rotation
+            }
         }
 
         /// <summary>
@@ -118,9 +136,19 @@ namespace GXPEngine
         /// <returns></returns>
         public abstract Projectile Duplicate(GameObject newSource);
 
-        public void Hit()
+        private void WhileExploding()
         {
+            if(Time.now >= explosionStartTime + explosionDuration)
+            {
+                LateDestroy();
+            }
+        }
 
+        public void StartExploding()
+        {
+            isExploding = true;
+            projectileAnimation.SetCycle(explosionAnimationFrame);
+            explosionStartTime = Time.now;
         }
     }
 }
