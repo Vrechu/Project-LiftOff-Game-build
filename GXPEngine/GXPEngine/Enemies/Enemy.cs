@@ -124,7 +124,6 @@ namespace GXPEngine
             dropShadow.width = spriteWidth;
             dropShadow.height = spriteHeight;
             dropShadow.SetXY(xOffset, yOffset);
-            dropShadow.alpha = 0.5f;
             AddChild(dropShadow);
         }
 
