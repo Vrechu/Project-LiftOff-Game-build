@@ -16,14 +16,18 @@ class Player : Sprite
     private Vec2 down;
     private Vec2 left;
     private Vec2 right;
-    
+
+    private bool CanMoveX;
+    private bool CanMoveY;
+
     private PlayerAnimations _playerAnimations;
     private byte _playerAnimationTime = 10;
     int _hurtAnimationLoops = 0;
-    int _maxHurtAnimationLoops = 3;
+    int _maxHurtAnimationLoops = 1;
     private float _shieldSpriteOffset = 8;
 
     public static event Action OnDeathAnimationEnd;
+    private Sprite dropShadow;
 
     public enum PlayerState
     {
@@ -42,9 +46,10 @@ class Player : Sprite
     public Player(float px, float py) : base("square.png")
     {
         SetOrigin(this.width / 2, this.height / 2);
-        _playerPosition.x = px;
-        _playerPosition.y = py;
+        x = px;
+        y = py;
         AddChild(new Shield(this));
+        SetDropShadow("DropShadow.png", 100, 25, 0, 60);
         AddChild(_playerAnimations = new PlayerAnimations());
         alpha = 0;
         SetPlayerState(PlayerState.IDLE);
@@ -115,30 +120,32 @@ class Player : Sprite
                 {
                     SetPlayerState(PlayerState.WALKING);
                 }
-                _playerVelocity = _playerDirection * playerSpeed;
+                _playerVelocity = _playerDirection * playerSpeed;           
             }
-            _playerPosition += _playerVelocity;
         }
     }
 
     // moves the player
     void UpdatePlayerScreenPosition()
     {
-        x = _playerPosition.x;
-        y = _playerPosition.y;
+        MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, game.FindObjectsOfType<Wall>());
+
+        _playerPosition.x = x;
+        _playerPosition.y = y;
     }
 
     void OnCollision(GameObject other)
     {
         if (_playerState != PlayerState.HURT
                 && _playerState != PlayerState.DYING
-            && (other is Projectile 
-            || other is Enemy))
+            && (other is Projectile))
         {
-            other.LateDestroy();
+            Projectile projectile = other as Projectile;
+            projectile.StartExploding();
             GameManager.Singleton.PlayerGetsHit(1);
             SetPlayerState(PlayerState.HURT);
-        }
+        }      
+        
     }
 
     //sets the playerstate and selects the proper animation to play.
@@ -149,7 +156,7 @@ class Player : Sprite
             {
                 Console.WriteLine(playerstate);
             }*/
-            _playerState = playerstate;           
+            _playerState = playerstate;
             switch (_playerState)
             {
                 case PlayerState.IDLE:
@@ -179,10 +186,11 @@ class Player : Sprite
     //inverts the animationsprite depending on the direction the player is walking.
     private void InvertAnimationSprite()
     {
-        if (_playerDirection.x > 0)
+        if (_playerVelocity.x > 0)
         {
-            _playerAnimations.width =  100;
-        }else if (_playerDirection.x < 0)
+            _playerAnimations.width = 100;
+        }
+        else if (_playerVelocity.x < 0)
         {
             _playerAnimations.width = -100;
         }
@@ -192,7 +200,7 @@ class Player : Sprite
     //loads the shield sprites
     public void ShowShieldSprites()
     {
-        AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset *2));
+        AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset * 2));
         AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset));
         AddChild(new ShieldLayer("Paint_layer_4.png", this, 0));
         AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset * -1));
@@ -202,7 +210,6 @@ class Player : Sprite
     // reverts the playerstate to idle after the hurt animation is finished
     private void RevertPlayerHurt()
     {
-        
         if (_playerState == PlayerState.HURT
             && _playerAnimations.currentFrame == 10)
         {
@@ -213,7 +220,6 @@ class Player : Sprite
             SetPlayerState(PlayerState.IDLE);
             _hurtAnimationLoops = 0;
         }
-        Console.WriteLine(_hurtAnimationLoops);
     }
 
     private void DeathAnimation()
@@ -229,10 +235,14 @@ class Player : Sprite
             OnDeathAnimationEnd?.Invoke();
         }
     }
+
+    protected void SetDropShadow(string shadowSprite, int spriteWidth, int spriteHeight, int xOffset, int yOffset)
+    {
+        dropShadow = new Sprite(shadowSprite);
+        dropShadow.SetOrigin(dropShadow.width / 2, dropShadow.height / 2);
+        dropShadow.width = spriteWidth;
+        dropShadow.height = spriteHeight;
+        dropShadow.SetXY(xOffset, yOffset);
+        AddChild(dropShadow);
+    }
 }
-
-
-
-
-
-

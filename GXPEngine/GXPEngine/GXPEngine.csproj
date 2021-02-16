@@ -97,5 +97,6 @@
     <Compile Include="ShieldLayer.cs" />
     <Compile Include="Vec2.cs" />
     <Compile Include="Vec2UnitTest.cs" />
+    <Compile Include="Wall.cs" />
   </ItemGroup>
 </Project>
