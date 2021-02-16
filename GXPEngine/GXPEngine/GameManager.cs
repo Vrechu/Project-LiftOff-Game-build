@@ -25,6 +25,7 @@ class GameManager : GameObject
     public int _playerHealth;
 
     public int _playerScore;
+    public int _highScore = 0;
 
     private GameManager()
     {
@@ -62,8 +63,16 @@ class GameManager : GameObject
         if (_playerHealth == 0)
         {
             Console.WriteLine("Two");
-            OnPlayerDeath?.Invoke();            
+            OnPlayerDeath?.Invoke();
+            CheckHighScore();
         }
-    }    
-}
+    }
 
+    private void CheckHighScore()
+    {
+        if (_highScore < _playerScore)
+        {
+            _highScore = _playerScore;
+        }
+    }
+}

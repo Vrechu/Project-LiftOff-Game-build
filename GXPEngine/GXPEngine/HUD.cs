@@ -24,6 +24,7 @@ namespace GXPEngine
         public void Update()
         {
             graphics.Clear(Color.Transparent);
+            graphics.DrawString("Highscore: " + GameManager.Singleton._highScore, font, Brushes.White, 50, 100, leftAlignment);
             graphics.DrawString("Score: " + GameManager.Singleton._playerScore, font, Brushes.White, 50, 50, leftAlignment);
             graphics.DrawString("Lifes: " + GameManager.Singleton._playerHealth, font, Brushes.White, width - 200, 50, rightAlignment);
         }
