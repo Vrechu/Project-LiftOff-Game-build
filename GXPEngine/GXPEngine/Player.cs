@@ -16,16 +16,20 @@ class Player : Sprite
     private Vec2 down;
     private Vec2 left;
     private Vec2 right;
+    
+    private PlayerAnimations _playerAnimations;
+    private byte _playerAnimationTime = 10;
+    int _hurtAnimationLoops = 0;
+    int _maxHurtAnimationLoops = 3;
+    private float _shieldSpriteOffset = 8;
+
+    public static event Action OnDeathAnimationEnd;
 
     public enum PlayerState
     {
         WALKING, IDLE, HURT, DYING
     }
-    
     public PlayerState _playerState = PlayerState.IDLE;
-    private PlayerAnimations _playerAnimations;
-    private byte _playerAnimationTime = 10;
-    private float _shieldSpriteOffset = 8;
 
     public Vec2 Position
     {
@@ -45,6 +49,12 @@ class Player : Sprite
         alpha = 0;
         SetPlayerState(PlayerState.IDLE);
         ShowShieldSprites();
+        GameManager.OnPlayerDeath += DeathAnimation;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnPlayerDeath -= DeathAnimation;
     }
 
     void Update()
@@ -54,6 +64,7 @@ class Player : Sprite
         UpdatePlayerScreenPosition();
         InvertAnimationSprite();
         RevertPlayerHurt();
+        DeathAnimationEnd();
     }
 
     // processes movement imputs
@@ -87,23 +98,27 @@ class Player : Sprite
     {
         _playerDirection = up + down + left + right;
         _playerDirection.Normalize();
-        if (_playerDirection.Length() == 0.0)
+
+        if (_playerState != PlayerState.DYING)
         {
-            if (_playerState != PlayerState.HURT)
+            if (_playerDirection.Length() == 0.0)
             {
-                SetPlayerState(PlayerState.IDLE);
+                if (_playerState != PlayerState.HURT)
+                {
+                    SetPlayerState(PlayerState.IDLE);
+                }
+                _playerVelocity = _playerVelocity / _inertiaCoefficient;
             }
-            _playerVelocity = _playerVelocity / _inertiaCoefficient;
-        }
-        else
-        {
-            if (_playerState != PlayerState.HURT)
+            else
             {
-                SetPlayerState(PlayerState.WALKING);
+                if (_playerState != PlayerState.HURT)
+                {
+                    SetPlayerState(PlayerState.WALKING);
+                }
+                _playerVelocity = _playerDirection * playerSpeed;
             }
-            _playerVelocity = _playerDirection * playerSpeed;
+            _playerPosition += _playerVelocity;
         }
-        _playerPosition += _playerVelocity;
     }
 
     // moves the player
@@ -115,7 +130,8 @@ class Player : Sprite
 
     void OnCollision(GameObject other)
     {
-        if (_playerState != PlayerState.HURT 
+        if (_playerState != PlayerState.HURT
+                && _playerState != PlayerState.DYING
             && (other is Projectile 
             || other is Enemy))
         {
@@ -129,7 +145,11 @@ class Player : Sprite
     public void SetPlayerState(PlayerState playerstate)
     {
         {
-            _playerState = playerstate;
+            /*if (_playerState != playerstate)
+            {
+                Console.WriteLine(playerstate);
+            }*/
+            _playerState = playerstate;           
             switch (_playerState)
             {
                 case PlayerState.IDLE:
@@ -149,6 +169,7 @@ class Player : Sprite
                     }
                 case PlayerState.DYING:
                     {
+                        _playerAnimations.SetCycle(0, 7, _playerAnimationTime);
                         break;
                     }
             }
@@ -178,15 +199,34 @@ class Player : Sprite
         AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset * -2));
     }
 
-
     // reverts the playerstate to idle after the hurt animation is finished
     private void RevertPlayerHurt()
     {
+        
         if (_playerState == PlayerState.HURT
             && _playerAnimations.currentFrame == 10)
         {
-            Console.WriteLine(_playerState);
+            _hurtAnimationLoops++;
+        }
+        if (_maxHurtAnimationLoops < _hurtAnimationLoops / _playerAnimationTime)
+        {
             SetPlayerState(PlayerState.IDLE);
+            _hurtAnimationLoops = 0;
+        }
+        Console.WriteLine(_hurtAnimationLoops);
+    }
+
+    private void DeathAnimation()
+    {
+        SetPlayerState(PlayerState.DYING);
+    }
+
+    private void DeathAnimationEnd()
+    {
+        if (_playerState == PlayerState.DYING
+            && _playerAnimations.currentFrame == 6)
+        {
+            OnDeathAnimationEnd?.Invoke();
         }
     }
 }

@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using GXPEngine;
 
-class GameManager
+class GameManager : GameObject
 {
     private static GameManager singleton;
-    public static MyGame _myGame;
+    public static event Action OnPlayerDeath;
+
     public static GameManager Singleton
     {
         get
         {
             if (singleton == null)
             {
-                singleton = new GameManager(_myGame);
+                singleton = new GameManager();
             }
             return singleton;
         }
@@ -25,10 +26,15 @@ class GameManager
 
     public int _playerScore;
 
-    private GameManager(MyGame myGame)
+    private GameManager()
     {
-        _myGame = myGame;
+        
         _playerHealth = _maxPlayerHealth;
+    }
+
+    void Update()
+    {
+        PlayerDies();
     }
 
     //removes the specified amount of health from playerhealth
@@ -36,7 +42,6 @@ class GameManager
     {      
         _playerHealth -= damage;
         _playerHealth = Mathf.Max(0, _playerHealth);
-        Console.WriteLine("OUCH! " + _playerHealth);
     }
 
     //resets the player health to max health
@@ -45,9 +50,20 @@ class GameManager
         _playerHealth = _maxPlayerHealth;
     }
     
+    //sets player score to 0
     public void ResetScore()
     {
         _playerScore = 0;
     }
+
+    // ends the game and starts the menu
+    public void PlayerDies()
+    {
+        if (_playerHealth == 0)
+        {
+            Console.WriteLine("Two");
+            OnPlayerDeath?.Invoke();            
+        }
+    }    
 }
 
