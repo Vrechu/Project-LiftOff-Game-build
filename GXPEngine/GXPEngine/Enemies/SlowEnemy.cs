@@ -36,6 +36,7 @@ namespace GXPEngine
             deathFrame = 17;
 
             SetHitbox(hitboxXOffset, hitboxYOffset);
+            SetDropShadow("DropShadow.png", 119, 25, 10, 55);
             SetAnimation("EnemySlow.png", 5, 4);
             SetProjectileLauncher(projectileLauncherXOffset, projectileLauncherYOffset, new SlowProjectile());
         }

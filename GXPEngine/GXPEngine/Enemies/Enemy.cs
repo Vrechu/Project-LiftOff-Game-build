@@ -25,6 +25,9 @@ namespace GXPEngine
 
         protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
 
+        protected int idleAnimationStartFrame = 0;
+        protected int idleAnimationFrameCount = 1;
+
         protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
         protected int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
         protected int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
@@ -40,9 +43,11 @@ namespace GXPEngine
         private int projectileShotTime; //The last time the enemy shot a projectile
         private bool isFiring = false;
         private bool isDying = false;
+        private bool canMove = true;
 
         private ProjectileLauncher projectileManager; //The projectile that's charging
         private EnemyAnimation enemyAnimation;
+        private Sprite dropShadow;
 
         private GameObject target; //The target the enemy is following
         private LineOfSight lineOfSight;
@@ -88,6 +93,8 @@ namespace GXPEngine
             lineOfSight = new LineOfSight(this);
             AddChild(lineOfSight);
 
+            GameManager.OnPlayerDeath += StopMoving;
+
             name = "Enemy";
         }
 
@@ -110,13 +117,24 @@ namespace GXPEngine
             AddChild(enemyAnimation);
         }
 
+        protected void SetDropShadow(string shadowSprite, int spriteWidth, int spriteHeight, int xOffset, int yOffset)
+        {
+            dropShadow = new Sprite(shadowSprite);
+            dropShadow.SetOrigin(dropShadow.width / 2, dropShadow.height / 2);
+            dropShadow.width = spriteWidth;
+            dropShadow.height = spriteHeight;
+            dropShadow.SetXY(xOffset, yOffset);
+            dropShadow.alpha = 0.5f;
+            AddChild(dropShadow);
+        }
+
         public void Update()
         {
             if (isDying)
             {
                 Dying();
             }
-            else
+            else if(canMove)
             {
                 lineOfSight.RotateTowards(RotationTowards(target)); //Rotate the line of sight towards the target
                 lineOfSight.SetLength(DistanceTo(target)); //Set the length of the line of sight to match the distance between the enemy and target
@@ -138,7 +156,7 @@ namespace GXPEngine
                 }
                 else
                 {
-                    enemyAnimation.SetAnimationCycle(0, 1, animationFrameTime);
+                    enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
                 }
 
                 //If the cooldown has run out
@@ -155,6 +173,10 @@ namespace GXPEngine
                 {
                     FaceDirection(true);
                 }
+            }
+            else
+            {
+                enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
             }
         }
 
@@ -224,9 +246,20 @@ namespace GXPEngine
         {
             switch (faceLeft)
             {
-                case true: enemyAnimation.width = Mathf.Abs(enemyAnimation.width); break;
-                case false: enemyAnimation.width = -Mathf.Abs(enemyAnimation.width); break;
+                case true:
+                    enemyAnimation.width = Mathf.Abs(enemyAnimation.width);
+                    dropShadow.x = Mathf.Abs(dropShadow.x);
+                    break;
+                case false:
+                    enemyAnimation.width = -Mathf.Abs(enemyAnimation.width);
+                    dropShadow.x = -Mathf.Abs(dropShadow.x);
+                    break;
             }
+        }
+
+        private void StopMoving()
+        {
+            canMove = false;
         }
 
         private void Die()
@@ -262,6 +295,12 @@ namespace GXPEngine
                 newRotation.RotateDegrees(180);
                 MoveInDirection(newRotation);
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            GameManager.OnPlayerDeath -= StopMoving;
+            base.OnDestroy();
         }
     }
 }
