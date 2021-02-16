@@ -36,7 +36,7 @@ namespace GXPEngine.Enemies
             deathFrame = 15;
 
             SetHitbox(hitboxXOffset, hitboxYOffset);
-            SetDropShadow("DropShadow.png", 119, 25, 10, 55);
+            SetDropShadow("DropShadow.png", 100, 25, 10, 55);
             SetAnimation("EnemyHoming.png", 4, 4);
             SetProjectileLauncher(projectileLauncherXOffset, projectileLauncherYOffset, new HomingProjectile());
         }

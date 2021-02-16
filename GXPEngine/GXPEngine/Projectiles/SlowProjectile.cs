@@ -17,7 +17,10 @@ namespace GXPEngine.Projectiles
 
             explosionAnimationFrame = 2;
 
-            SetHitbox(0, -8);
+            hitboxXOffset = 0;
+            hitboxYOffset = 8;
+
+            SetHitbox();
             SetAnimation("ProjectileSlow.png", 3, 1, 3);
         }
 

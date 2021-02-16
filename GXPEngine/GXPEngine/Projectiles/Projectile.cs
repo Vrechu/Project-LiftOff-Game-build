@@ -60,7 +60,7 @@ namespace GXPEngine
             name = "Projectile";
         }
 
-        protected void SetHitbox(int hitboxXOffset, int hitboxYOffset)
+        protected void SetHitbox()
         {
             SetOrigin(width / 2, height / 2); //Set the origin
         }

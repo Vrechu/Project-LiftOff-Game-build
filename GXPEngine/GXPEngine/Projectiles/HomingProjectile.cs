@@ -16,7 +16,10 @@ namespace GXPEngine.Projectiles
 
             explosionAnimationFrame = 0;
 
-            SetHitbox(-1, -1);
+            hitboxXOffset = 1;
+            hitboxYOffset = 1;
+
+            SetHitbox();
             SetAnimation("ProjectileHoming.png", 2, 2, 3);
         }
 

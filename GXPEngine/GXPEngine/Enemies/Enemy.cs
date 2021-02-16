@@ -82,7 +82,7 @@ namespace GXPEngine
         private void Initialize(float spawnX, float spawnY, GameObject newTarget)
         {
             color = 0x00ff06;
-            alpha = 1;
+            alpha = 0;
 
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
