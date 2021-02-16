@@ -11,6 +11,9 @@ namespace GXPEngine
         protected int shootAnimationStartFrame = 0;
         protected int shootAnimationFrameCount = 2;
 
+        protected int hitboxXOffset = 0;
+        protected int hitboxYOffset = 0;
+
         protected int explosionAnimationFrame = 2;
 
         private bool isExploding = false;
@@ -44,26 +47,32 @@ namespace GXPEngine
         /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
         /// <param name="newSource">The source the projectile was shot from</param>
         /// <param name="direction">The direction the projectile is being shot at</param>
-        public Projectile(string sprite, int spriteCols, int spriteRows, string hitboxSprite, int hitboxXOffset, int hitboxYOffset) : base(hitboxSprite)
+        public Projectile(string hitboxSprite) : base(hitboxSprite)
         {
-            Initialize(sprite, spriteCols, spriteRows, hitboxXOffset, hitboxYOffset);
+            Initialize();
         }
 
-        private void Initialize(string sprite, int spriteCols, int spriteRows, int hitboxXOffset, int hitboxYOffset)
+        private void Initialize()
         {
             color = 0x00ff06;
-            alpha = 0;
+            alpha = 1;
 
+            name = "Projectile";
+        }
+
+        protected void SetHitbox(int hitboxXOffset, int hitboxYOffset)
+        {
             SetOrigin(width / 2, height / 2); //Set the origin
+        }
 
-            projectileAnimation = new AnimationSprite(sprite, spriteCols, spriteRows);
+        protected void SetAnimation(string animationSprite, int spriteCols, int spriteRows, int spriteFrames)
+        {
+            projectileAnimation = new AnimationSprite(animationSprite, spriteCols, spriteRows, frames: spriteFrames);
             projectileAnimation.SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset);
 
             projectileAnimation.SetCycle(shootAnimationStartFrame, shootAnimationFrameCount);
 
             AddChild(projectileAnimation);
-
-            name = "Projectile";
         }
 
         public void Update()
@@ -138,7 +147,7 @@ namespace GXPEngine
 
         private void WhileExploding()
         {
-            if(Time.now >= explosionStartTime + explosionDuration)
+            if (Time.now >= explosionStartTime + explosionDuration)
             {
                 LateDestroy();
             }

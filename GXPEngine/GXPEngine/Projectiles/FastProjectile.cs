@@ -7,9 +7,17 @@ namespace GXPEngine.Projectiles
 {
     class FastProjectile : Projectile
     {
-        public FastProjectile() : base("ProjectileFast.png", 3, 1, "ProjectileFastHitbox.png", 0, 22)
+        public FastProjectile() : base("ProjectileFastHitbox.png")
         {
             moveSpeed = 10f;
+
+            shootAnimationStartFrame = 0;
+            shootAnimationFrameCount = 2;
+
+            explosionAnimationFrame = 2;
+
+            SetHitbox(0, -22);
+            SetAnimation("ProjectileFast.png", 3, 1, 3);
         }
 
         public override Projectile Duplicate(GameObject newSource)

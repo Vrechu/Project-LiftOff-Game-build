@@ -82,7 +82,7 @@ namespace GXPEngine
         private void Initialize(float spawnX, float spawnY, GameObject newTarget)
         {
             color = 0x00ff06;
-            alpha = 0;
+            alpha = 1;
 
             SetXY(spawnX, spawnY); //Set the X and Y position
             target = newTarget; //Set the target
@@ -100,7 +100,6 @@ namespace GXPEngine
 
         protected void SetHitbox(int hitboxXOffset, int hitboxYOffset)
         {
-            Vector2 hitboxOffset = new Vector2(hitboxXOffset / scale, hitboxYOffset * scale);
             SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Center the origin of the enemy
         }
 
@@ -133,7 +132,7 @@ namespace GXPEngine
             {
                 Dying();
             }
-            else if(canMove)
+            else if (canMove)
             {
                 lineOfSight.RotateTowards(RotationTowards(target)); //Rotate the line of sight towards the target
                 lineOfSight.SetLength(DistanceTo(target)); //Set the length of the line of sight to match the distance between the enemy and target
@@ -265,7 +264,6 @@ namespace GXPEngine
         {
             isDying = true;
             GameManager.Singleton._playerScore += scoreWorth;
-            Console.WriteLine(GameManager.Singleton._playerScore);
         }
 
         private void Dying()

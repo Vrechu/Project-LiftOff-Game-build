@@ -39,6 +39,7 @@
     <Compile Include="Arena.cs" />
     <Compile Include="Enemies\EnemyAnimation.cs" />
     <Compile Include="Enemies\FastEnemy.cs" />
+    <Compile Include="Enemies\HomingEnemy.cs" />
     <Compile Include="Enemies\SlowEnemy.cs" />
     <Compile Include="EnemySpawnPoint.cs" />
     <Compile Include="Enemies\Enemy.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="PlayerAnimations.cs" />
     <Compile Include="Projectiles\FastProjectile.cs" />
+    <Compile Include="Projectiles\HomingProjectile.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
     <Compile Include="Projectiles\ProjectileLauncher.cs" />
     <Compile Include="Projectiles\SlowProjectile.cs" />

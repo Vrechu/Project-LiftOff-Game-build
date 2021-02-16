@@ -5,25 +5,24 @@ using System.Text;
 
 namespace GXPEngine.Projectiles
 {
-    class SlowProjectile : Projectile
+    class HomingProjectile : Projectile
     {
-        public SlowProjectile() : base("ProjectileSlowHitbox.png")
+        public HomingProjectile() : base("ProjectileHomingHitbox.png")
         {
-            //Override the variables
             moveSpeed = 5f;
 
             shootAnimationStartFrame = 0;
-            shootAnimationFrameCount = 2;
+            shootAnimationFrameCount = 3;
 
-            explosionAnimationFrame = 2;
+            explosionAnimationFrame = 0;
 
-            SetHitbox(0, -8);
-            SetAnimation("ProjectileSlow.png", 3, 1, 3);
+            SetHitbox(-1, -1);
+            SetAnimation("ProjectileHoming.png", 2, 2, 3);
         }
 
         public override Projectile Duplicate(GameObject newSource)
         {
-            SlowProjectile projectile = new SlowProjectile();
+            HomingProjectile projectile = new HomingProjectile();
             projectile.source = newSource;
             return projectile;
         }

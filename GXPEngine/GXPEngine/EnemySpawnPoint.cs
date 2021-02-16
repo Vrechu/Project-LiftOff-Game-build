@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using GXPEngine;
+using GXPEngine.Enemies;
 
 class EnemySpawnPoint : Sprite
 {
-    private Player _player; // target of enemies
+    private Player _player; // target of enemies 
 
-    private int _lastSpawnTime; // last time enemy spawned
-    private int _spawnTimer = 10; // countdown time in seconds
+    private int _lastSpawnTime; // last time enemy spawned 
+    private int _spawnTimer = 10000; // countdown time in milliseconds 
+    public int EnemiesToSpawn { get; private set; } = 1;
 
     public EnemySpawnPoint(float px, float py, Player player) : base("circle.png")
     {
@@ -25,22 +25,37 @@ class EnemySpawnPoint : Sprite
     {
         SpawnTimer();
     }
-    
-    // spawns an enemy
+
+    // spawns an enemy 
     public void SpawnEnemy()
-    {        
-        new SlowEnemy (x,y, _player);
+    {
+
+        switch (Arena.RandomEnemy)
+        {
+            case 0:
+                new SlowEnemy(x, y, _player);
+                break;
+            case 1:
+                new FastEnemy(x, y, _player);
+                break;
+            case 2:
+                new HomingEnemy(x, y, _player);
+                break;
+        }
     }
 
-    //timer for spawning enemies
+    //timer for spawning enemies 
     public void SpawnTimer()
     {
-        if (Time.now > _lastSpawnTime + _spawnTimer * 1000)
+        if (Time.now > _lastSpawnTime + (_spawnTimer / EnemiesToSpawn))
         {
             _lastSpawnTime = Time.now;
             SpawnEnemy();
         }
-        
+    }
+
+    public void IncreaseEnemies(int increase)
+    {
+        EnemiesToSpawn += increase;
     }
 }
-
