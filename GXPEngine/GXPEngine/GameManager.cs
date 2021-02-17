@@ -62,7 +62,6 @@ class GameManager : GameObject
     {
         if (_playerHealth == 0)
         {
-            Console.WriteLine("Two");
             OnPlayerDeath?.Invoke();
             CheckHighScore();
         }

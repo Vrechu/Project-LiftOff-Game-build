@@ -75,17 +75,17 @@ class Arena : Sprite
         {
             new EnemySpawnPoint(120,280, _player),
             new EnemySpawnPoint(width - 120, 280, _player),
-            new EnemySpawnPoint(120, height, _player),
-            new EnemySpawnPoint(width - 120, height, _player)
+            new EnemySpawnPoint(120, height - 100, _player),
+            new EnemySpawnPoint(width - 120, height - 100, _player)
         };
         AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
 
         AddChild(new HUD(game.width, game.height));      
 
-        AddChild(new Wall(0, 240, width, 10));
-        AddChild(new Wall(0, height -30, width, 30));
-        AddChild(new Wall(0, 0, 10, height));
-        AddChild(new Wall(width - 10, 0, 10, height));
+        AddChild(new Wall(0, 320, width, 10));
+        AddChild(new Wall(0, height, width, 30));
+        AddChild(new Wall(-5, 0, 10, height));
+        AddChild(new Wall(width -5, 0, 10, height));
 
         lastDifficultyIncrease = Time.now;
         lastEnemyIncrease = Time.now;

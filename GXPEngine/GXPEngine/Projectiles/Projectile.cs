@@ -24,8 +24,8 @@ namespace GXPEngine
 
         //============= EVENTS =============
         #region
-            public static event Action OnShot; //When the projectile is shot
-            public static event Action OnExplode; //When the projectile explodes
+            public static event Action<ProjectileType> OnShot; //When the projectile is shot
+            public static event Action<ProjectileType> OnExplode; //When the projectile explodes
         #endregion
 
         private bool isExploding = false;
@@ -162,7 +162,7 @@ namespace GXPEngine
             x = spawnX;
             y = spawnY;
             game.AddChild(this);
-            OnShot.Invoke();
+            OnShot?.Invoke(projectileType);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace GXPEngine
             isExploding = true;
             projectileAnimation.SetCycle(explosionAnimationFrame);
             explosionStartTime = Time.now;
-            OnExplode.Invoke();
+            OnExplode?.Invoke(projectileType);
         }
     }
 }

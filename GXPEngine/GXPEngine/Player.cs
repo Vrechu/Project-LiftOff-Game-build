@@ -8,26 +8,25 @@ class Player : Sprite
 {
     private Vec2 _playerPosition;
     private Vec2 _playerDirection;
-    private float playerSpeed = 5;
+    private float playerSpeed = 5;          // player movement speed
     private Vec2 _playerVelocity;
-    private float _inertiaCoefficient = 1.2f;
+    private float _inertiaCoefficient = 1.2f;   //time it takes the player to slow down
 
     private Vec2 up;
     private Vec2 down;
     private Vec2 left;
     private Vec2 right;
 
-    private bool CanMoveX;
-    private bool CanMoveY;
+    private PlayerAnimations _playerAnimations;     // animation sprite of the player
+    private byte _playerAnimationTime = 10;         //time each animation frame is shown
+    int _hurtAnimationLoops = 0;            
+    int _maxHurtAnimationLoops = 1;             //amount of time the hurt animation loops
+    private float _shieldSpriteOffset = 8;          //the offset of the shield sprites
 
-    private PlayerAnimations _playerAnimations;
-    private byte _playerAnimationTime = 10;
-    int _hurtAnimationLoops = 0;
-    int _maxHurtAnimationLoops = 1;
-    private float _shieldSpriteOffset = 8;
+    public static event Action OnDeathAnimationEnd;         //death animation end event
+    private Sprite dropShadow;              //shadow sprite
 
-    public static event Action OnDeathAnimationEnd;
-    private Sprite dropShadow;
+    public static event Action OnPLayerHit;
 
     public enum PlayerState
     {
@@ -134,16 +133,18 @@ class Player : Sprite
         _playerPosition.y = y;
     }
 
+    //collision method
     void OnCollision(GameObject other)
     {
-        if (_playerState != PlayerState.HURT
+        if (_playerState != PlayerState.HURT            //if player is not in hurt or dying state
                 && _playerState != PlayerState.DYING
             && (other is Projectile))
         {
-            Projectile projectile = other as Projectile;
+            Projectile projectile = other as Projectile;        //set projectile to exploding
             projectile.StartExploding();
-            GameManager.Singleton.PlayerGetsHit(1);
-            SetPlayerState(PlayerState.HURT);
+            GameManager.Singleton.PlayerGetsHit(1);             //player gets hit and loses health
+            SetPlayerState(PlayerState.HURT);               //playerstate is hurt
+            OnPLayerHit?.Invoke();
         }      
         
     }
@@ -152,10 +153,6 @@ class Player : Sprite
     public void SetPlayerState(PlayerState playerstate)
     {
         {
-            /*if (_playerState != playerstate)
-            {
-                Console.WriteLine(playerstate);
-            }*/
             _playerState = playerstate;
             switch (_playerState)
             {
@@ -222,11 +219,13 @@ class Player : Sprite
         }
     }
 
+    //sets the nplayer state to dying
     private void DeathAnimation()
     {
         SetPlayerState(PlayerState.DYING);
     }
 
+    //invokes the event of the deathanimation ending
     private void DeathAnimationEnd()
     {
         if (_playerState == PlayerState.DYING
@@ -236,6 +235,7 @@ class Player : Sprite
         }
     }
 
+    //places the dropshadow of the player
     protected void SetDropShadow(string shadowSprite, int spriteWidth, int spriteHeight, int xOffset, int yOffset)
     {
         dropShadow = new Sprite(shadowSprite);
