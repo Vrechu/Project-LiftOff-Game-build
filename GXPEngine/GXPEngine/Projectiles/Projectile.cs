@@ -22,6 +22,9 @@ namespace GXPEngine
 
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
+        protected GameObject target;
+
+        protected bool shouldHome = false;
 
         private AnimationSprite projectileAnimation;
 
@@ -55,7 +58,7 @@ namespace GXPEngine
         private void Initialize()
         {
             color = 0x00ff06;
-            alpha = 1;
+            alpha = 0;
 
             name = "Projectile";
         }
@@ -89,10 +92,20 @@ namespace GXPEngine
             }
             else
             {
+                if (shouldHome)
+                {
+                    RotateTowardsObject(target);
+                }
+
                 Move(moveSpeed, 0); //Move in the fired direction
             }
 
             projectileAnimation.Animate();
+        }
+
+        public void Reflect()
+        {
+            shouldHome = false;
         }
 
         /// <summary>
@@ -143,7 +156,7 @@ namespace GXPEngine
         /// </summary>
         /// <param name="newSource">The source of the projectile</param>
         /// <returns></returns>
-        public abstract Projectile Duplicate(GameObject newSource);
+        public abstract Projectile Duplicate(GameObject newSource, GameObject newTarget);
 
         private void WhileExploding()
         {

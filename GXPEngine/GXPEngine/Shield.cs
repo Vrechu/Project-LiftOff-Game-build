@@ -44,6 +44,7 @@ class Shield : Sprite
         {
             Projectile projectile = other as Projectile;
             projectile.RotateTowardsDirection(shieldDirectionVector);
+            projectile.Reflect();
             /*projectile.SetXY(projectileReflectLocation.x, projectileReflectLocation.y);*/
         }
     }

@@ -19,14 +19,17 @@ namespace GXPEngine.Projectiles
             hitboxXOffset = 1;
             hitboxYOffset = 1;
 
+            shouldHome = true;
+
             SetHitbox();
             SetAnimation("ProjectileHoming.png", 2, 2, 3);
         }
 
-        public override Projectile Duplicate(GameObject newSource)
+        public override Projectile Duplicate(GameObject newSource, GameObject newTarget)
         {
             HomingProjectile projectile = new HomingProjectile();
             projectile.source = newSource;
+            projectile.target = newTarget;
             return projectile;
         }
     }

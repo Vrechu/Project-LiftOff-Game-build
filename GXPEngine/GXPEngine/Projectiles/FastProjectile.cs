@@ -23,10 +23,11 @@ namespace GXPEngine.Projectiles
             SetAnimation("ProjectileFast.png", 3, 1, 3);
         }
 
-        public override Projectile Duplicate(GameObject newSource)
+        public override Projectile Duplicate(GameObject newSource, GameObject newTarget)
         {
             FastProjectile projectile = new FastProjectile();
             projectile.source = newSource;
+            projectile.target = newTarget;
             return projectile;
         }
     }

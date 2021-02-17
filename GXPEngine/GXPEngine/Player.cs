@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -128,7 +128,7 @@ class Player : Sprite
     // moves the player
     void UpdatePlayerScreenPosition()
     {
-        MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, game.FindObjectsOfType<Wall>());
+        MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, dropShadow, game.FindObjectsOfType<Wall>());
 
         _playerPosition.x = x;
         _playerPosition.y = y;

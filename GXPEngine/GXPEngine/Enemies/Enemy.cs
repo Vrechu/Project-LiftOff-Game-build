@@ -107,7 +107,7 @@ namespace GXPEngine
 
         protected void SetProjectileLauncher(int projectileXOffset, int projectileYOffset, Projectile projectile)
         {
-            projectileManager = new ProjectileLauncher(projectile, this);
+            projectileManager = new ProjectileLauncher(projectile, this, target);
             projectileManager.SetXY(-projectileXOffset, projectileYOffset);
             enemyAnimation.AddChild(projectileManager);
         }
@@ -145,15 +145,17 @@ namespace GXPEngine
                     RotateAround(target); //Rotate around the target
                 }
 
+                //If the enemy is firing
                 if (isFiring)
                 {
                     ChargeShot();
                 }
-                //If the distance to the target is large enough to still move && is not firing
+                //Otherwise if the enemy can move
                 else if (DistanceTo(target) > distanceFromTarget)
                 {
                     MoveInDirection(RotationTowards(target)); //Move towards the target
                 }
+                //Otherwise if the enemy is idle
                 else
                 {
                     enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
@@ -165,18 +167,15 @@ namespace GXPEngine
                     StartFiring(); //Charge a new projectile
                 }
 
+                //Face the enemy the correct way
                 if (target.x > x)
                 {
-                    FaceDirection(false);
+                    FaceLeft(false);
                 }
                 else
                 {
-                    FaceDirection(true);
+                    FaceLeft(true);
                 }
-            }
-            else
-            {
-                enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
             }
         }
 
@@ -239,10 +238,11 @@ namespace GXPEngine
             StopFiring();
             enemyAnimation.SetAnimationCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
             moveDirection.Normalize();
-            Position += moveDirection * moveSpeed; //Move 'moveSpeed' units towards the move direction
+            MoveUntilCollision(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed, dropShadow, game.FindObjectsOfType<Wall>()); //Move 'moveSpeed' units towards the move direction
+            //Position += moveDirection * moveSpeed; 
         }
 
-        private void FaceDirection(bool faceLeft)
+        private void FaceLeft(bool faceLeft)
         {
             switch (faceLeft)
             {
@@ -284,7 +284,7 @@ namespace GXPEngine
                 Projectile projectile = other as Projectile;
                 if (projectile.HasLeftSource)
                 {
-                    Die();
+                    //Die();
                     projectile.StartExploding();
                 }
             }
