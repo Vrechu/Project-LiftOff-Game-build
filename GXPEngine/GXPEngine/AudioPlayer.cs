@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GXPEngine.Projectiles;
+using GXPEngine.Enemies;
 using System.Linq;
 using System.Text;
 using GXPEngine;
@@ -19,9 +20,9 @@ class AudioPlayer : GameObject
     {
         _myGame = myGame;
         EventSubscriptions();
-        _gameMusic = new Sound("test_music.mp3");
-        _menuMusic = new Sound("test_music.mp3");
-        _comicMusic = new Sound("test_music.mp3");
+        _gameMusic = new Sound("test_music.mp3", true ,true);
+        _menuMusic = new Sound("test_music.mp3", true, true);
+        _comicMusic = new Sound("test_music.mp3", true, true);
     }
 
     private void EventSubscriptions()
@@ -48,21 +49,18 @@ class AudioPlayer : GameObject
 
     private void PlayHurtSound()
     {
-        _effect = new Sound("character_hit.wav");
-        _effectsChannel = _effect.Play();
+        new Sound("character_hit.wav").Play();
     }
 
     private void PlayDeathSound()
     {
         _musicChannel.Stop();
-        _effect = new Sound("PlayerDead.wav");
-        _effectsChannel = _effect.Play();        
+        new Sound("PlayerDead.wav").Play();
     }
 
     private void PlayReflectSound()
     {
-        _effect = new Sound("reflect_sound.wav");
-        _effectsChannel = _effect.Play();
+        new Sound("reflect_sound.wav").Play();
     }
 
     private void PlayProjectileShotSound(ProjectileType projectileType)
@@ -71,28 +69,42 @@ class AudioPlayer : GameObject
         {
             case ProjectileType.SLOW:
                 {
-                    _effect = new Sound("fireball.wav");
-                    _effectsChannel = _effect.Play();
+                    new Sound("fireball.wav").Play();
                     break;
                 }
             case ProjectileType.FAST:
                 {
-                    _effect = new Sound("ping.wav");
-                    _effectsChannel = _effect.Play();
+                    new Sound("ping.wav").Play();
                     break;
                 }
             case ProjectileType.HOMING:
                 {
-                    _effect = new Sound("bone_throw1.wav");
-                    _effectsChannel = _effect.Play();
+                    new Sound("bone_throw1.wav").Play();
                     break;
                 }
         }
     }
 
-    private void PlayEnemyHitSound()
+    private void PlayEnemyHitSound(EnemyType enemyType)
     {
-        new Sound("reflect_sound.wav").Play();
+        switch (enemyType)
+        {
+            case EnemyType.SLOW:
+                {
+                    new Sound("fireball.wav").Play();
+                    break;
+                }
+            case EnemyType.FAST:
+                {
+                    new Sound("ping.wav").Play();
+                    break;
+                }
+            case EnemyType.HOMING:
+                {
+                    new Sound("bone_throw1.wav").Play();
+                    break;
+                }
+        }
     }
 
     void PlayMusic()
@@ -104,8 +116,7 @@ class AudioPlayer : GameObject
         switch (_myGame._screenState)
         {
             case MyGame.ScreenState.INGAME:
-                {
-                    
+                {                    
                     _musicChannel = _gameMusic.Play();
                     break;
                 }
