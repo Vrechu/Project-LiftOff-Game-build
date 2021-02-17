@@ -82,10 +82,10 @@ class Arena : Sprite
 
         AddChild(new HUD(game.width, game.height));      
 
-        AddChild(new Wall(0, 220, width, 30));
-        AddChild(new Wall(0, height - 10, width, 30));
+        AddChild(new Wall(0, 240, width, 10));
+        AddChild(new Wall(0, height -30, width, 30));
         AddChild(new Wall(0, 0, 10, height));
-        AddChild(new Wall(width - 180, 0, 10, height));
+        AddChild(new Wall(width - 10, 0, 10, height));
 
         lastDifficultyIncrease = Time.now;
         lastEnemyIncrease = Time.now;
