@@ -8,7 +8,7 @@ class Player : Sprite
 {
     private Vec2 _playerPosition;
     private Vec2 _playerDirection;
-    private float playerSpeed = 5;          // player movement speed
+    private float playerSpeed = 4;          // player movement speed
     private Vec2 _playerVelocity;
     private float _inertiaCoefficient = 1.2f;   //time it takes the player to slow down
 

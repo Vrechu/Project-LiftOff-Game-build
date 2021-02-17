@@ -11,6 +11,8 @@ class Shield : Sprite
     private float projectileSpawnDistance = 20;
     private Vec2 projectileReflectLocation;
 
+    public static event Action OnProjectileReflect;
+
     public Shield(Player player) : base("Shield_Hitbox.png")
     {        
         SetOrigin(-96 , height/2);
@@ -45,7 +47,7 @@ class Shield : Sprite
             Projectile projectile = other as Projectile;
             projectile.RotateTowardsDirection(shieldDirectionVector);
             projectile.Reflect();
-            /*projectile.SetXY(projectileReflectLocation.x, projectileReflectLocation.y);*/
+            OnProjectileReflect?.Invoke();
         }
     }
 

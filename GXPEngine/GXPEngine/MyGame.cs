@@ -8,10 +8,12 @@ public class MyGame : Game
     private Menu _menu;
     private GameManager _gameManager;
     public static event Action OnPlayerDeath;
+    public static event Action OnScreenStateSwitch;
+    public static event Action OnGameRun;
 
     public enum ScreenState
     {
-        MENU, INGAME
+        MENU, INGAME, COMIC
     }
     public ScreenState _screenState = ScreenState.MENU;
 
@@ -19,8 +21,9 @@ public class MyGame : Game
     {
         loadScreens();
         AddChild(GameManager.Singleton);
-
+        AddChild(new AudioPlayer(this));
         Player.OnDeathAnimationEnd += GameOver;
+        OnGameRun?.Invoke();
 
     }
 
@@ -31,12 +34,7 @@ public class MyGame : Game
 
     void Update()
     {
-        //----------------------------------------------------example-code----------------------------
-        if (Input.GetKeyDown(Key.SPACE)) // When space is pressed...
-        {
-            new Sound("ping.wav").Play(); // ...play a sound
-        }
-        //------------------------------------------------end-of-example-code-------------------------
+        
     }
 
     static void Main()                          // Main() is the first method that's called when the program is run
@@ -83,7 +81,7 @@ public class MyGame : Game
     public void loadScreens() // determines which screens to show
     {
         switch (_screenState)
-        {
+        {            
             case ScreenState.MENU:
                 {
                     StartMenu();
@@ -95,6 +93,7 @@ public class MyGame : Game
                     break;
                 }
         }
+        OnScreenStateSwitch?.Invoke();
     }
 
     // ends the game and starts the menu

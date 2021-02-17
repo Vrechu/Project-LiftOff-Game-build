@@ -64,6 +64,7 @@ class GameManager : GameObject
         {
             OnPlayerDeath?.Invoke();
             CheckHighScore();
+            ResetHealth();
         }
     }
 
