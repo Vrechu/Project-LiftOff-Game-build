@@ -451,7 +451,7 @@ namespace GXPEngine
 		/// (the point and penetration depth fields of the collision object will always be zero).
 		/// Otherwise it returns null.
 		/// </summary>
-		virtual public Collision MoveUntilCollision(float vx, float vy, GameObject[] objectsToCheck) {
+		virtual public Collision MoveUntilCollision(float vx, float vy, GameObject collisionSource, GameObject[] objectsToCheck) {
 			Collision col = null;
 			//Vector2 normal = new Vector2 ();
 			if (objectsToCheck.Length == 0) {
@@ -462,9 +462,9 @@ namespace GXPEngine
 			float minTOI = 1;
 			foreach (GameObject other in objectsToCheck) {
 				Vector2 newNormal;
-				float newTOI = TimeOfImpact (other, vx, vy, out newNormal);
+				float newTOI = collisionSource.TimeOfImpact(other, vx, vy, out newNormal);
 				if (newTOI < minTOI) {
-					col = new Collision (this, other, newNormal, newTOI);
+					col = new Collision (collisionSource, other, newNormal, newTOI);
 					minTOI = newTOI;
 				}
 			}
@@ -489,7 +489,7 @@ namespace GXPEngine
 			GameObject[] overlaps = GetCollisions ();
 			x -= vx;
 			y -= vy;
-			return MoveUntilCollision (vx, vy, overlaps);
+			return MoveUntilCollision (vx, vy, this, overlaps);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
