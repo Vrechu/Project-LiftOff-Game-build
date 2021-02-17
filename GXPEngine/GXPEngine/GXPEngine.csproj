@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="AudioPlayer.cs" />
     <Compile Include="Enemies\EnemyAnimation.cs" />
     <Compile Include="Enemies\FastEnemy.cs" />
     <Compile Include="Enemies\HomingEnemy.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Projectiles\Projectile.cs" />
     <Compile Include="Projectiles\ProjectileLauncher.cs" />
     <Compile Include="Projectiles\SlowProjectile.cs" />
+    <Compile Include="Projectiles\ProjectileType.cs" />
     <Compile Include="Shield.cs" />
     <Compile Include="ShieldLayer.cs" />
     <Compile Include="Vec2.cs" />
