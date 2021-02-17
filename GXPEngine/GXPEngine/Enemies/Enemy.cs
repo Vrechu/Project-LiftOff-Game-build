@@ -273,7 +273,7 @@ namespace GXPEngine
         {
             isDying = true;
             GameManager.Singleton._playerScore += scoreWorth;
-            OnHit.Invoke();
+            OnHit?.Invoke();
         }
 
         private void Dying()
