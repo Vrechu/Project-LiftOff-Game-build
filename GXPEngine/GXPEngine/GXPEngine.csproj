@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Arena.cs" />
     <Compile Include="AudioPlayer.cs" />
+    <Compile Include="Cutscene.cs" />
     <Compile Include="Enemies\EnemyAnimation.cs" />
     <Compile Include="Enemies\EnemyType.cs" />
     <Compile Include="Enemies\FastEnemy.cs" />

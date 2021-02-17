@@ -6,6 +6,7 @@ public class MyGame : Game
 {
     private Arena _arena;
     private Menu _menu;
+    private Cutscene _cutscene;
     private GameManager _gameManager;
     public static event Action OnPlayerDeath;
     public static event Action OnScreenStateSwitch;
@@ -13,7 +14,7 @@ public class MyGame : Game
 
     public enum ScreenState
     {
-        MENU, INGAME, COMIC
+        MENU, INGAME, CUTSCENE
     }
     public ScreenState _screenState = ScreenState.MENU;
 
@@ -45,11 +46,12 @@ public class MyGame : Game
     //destroys the menu then starts the game
     private void StartGame()
     {
-        if (_menu != null)
+        if (_cutscene != null)
         {
-            _menu.LateDestroy();
-            _menu = null;
+            _cutscene.LateDestroy();
+            _cutscene = null;
         }
+
         AddChild(_arena = new Arena(this));
     }
 
@@ -77,6 +79,18 @@ public class MyGame : Game
         LateAddChild(_menu);
     }
 
+    private void StartCutscene()
+    {
+        if (_menu != null)
+        {
+            _menu.LateDestroy();
+            _menu = null;
+        }
+
+        _cutscene = new Cutscene(this);
+        LateAddChild(_cutscene);
+    }
+
     // switch that loads proper screen depending on the screenstate
     public void loadScreens() // determines which screens to show
     {
@@ -90,6 +104,11 @@ public class MyGame : Game
             case ScreenState.INGAME:
                 {
                     StartGame();
+                    break;
+                }
+            case ScreenState.CUTSCENE:
+                {
+                    StartCutscene();
                     break;
                 }
         }

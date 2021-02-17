@@ -31,7 +31,7 @@ class Menu : Sprite
         if (Input.GetMouseButtonDown(0)
             && _button.HitTestPoint(Input.mouseX, Input.mouseY)) // if mouse over button and clicked start level
         {
-            _mygame._screenState = MyGame.ScreenState.INGAME;
+            _mygame._screenState = MyGame.ScreenState.CUTSCENE;
             _mygame.loadScreens();
         }
     }
