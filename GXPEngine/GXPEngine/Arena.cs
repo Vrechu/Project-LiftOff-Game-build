@@ -9,28 +9,40 @@ class Arena : Sprite
 {
     Player _player;
 
+    /// <summary>
+    /// The odds for each enemy to spawn
+    /// </summary>
     public static int[,] EnemySpawnChance { get; } = new int[,]
     {
-        { 400, 100,  900 }, //The actual spawn chance 
-        {   0,  10, 15 }  //The amount it should increase by 
+        { 400, 100,  0 }, //The odds of the enemy spawning
+        {   0,  10, 15 }  //The amount the odds should increase by
     };
+
+    private int lastDifficultyIncrease; //The last time the enemySpawnChance was updated
+    private int difficultyIncreaseTimer = 10000; //The amount of time before the enemySpawnChance is updated (milliseconds)
+    private int lastEnemyIncrease; //The last time more enemies started spawning
+    private int enemyIncreaseTimer = 5000; //The amount of time before more enemies start spawning (milliseconds)
+
+    private int maxEnemiesAlive = 10; //The maximum number of enemies to be alive in the arena at once
+    public static bool CanSpawnMoreEnemies; //Whether the arena can spawn more enemies
 
     public static int RandomEnemy
     {
         get
         {
-            int totalChance = 0;
+            float totalChance = 0;
             for (int i = 0; i < EnemySpawnChance.Length / 2; i++)
             {
                 totalChance += EnemySpawnChance[0, i];
             }
 
-            int random = Utils.Random(0, totalChance);
-            int result = 0;
+            Console.WriteLine(Mathf.Round((100f / totalChance * EnemySpawnChance[0, 0])) + "% | " + Mathf.Round((100 / totalChance * EnemySpawnChance[0, 1])) + "% | " + Mathf.Round((100 / totalChance * EnemySpawnChance[0, 2])) + "%");
+
+            int random = (int)Utils.Random(0, totalChance);
 
             totalChance = 0;
 
-            for (result = 0; result < EnemySpawnChance.Length / 2; result++)
+            for (int result = 0; result < EnemySpawnChance.Length / 2; result++)
             {
                 totalChance += EnemySpawnChance[0, result];
 
@@ -41,16 +53,19 @@ class Arena : Sprite
             return 0;
         }
     }
+    public static int NumberOfEnemies;
 
     private EnemySpawnPoint[] enemySpawnPoints;
 
-    private int lastDifficultyIncrease;
-    private int difficultyIncreaseTimer = 5000;
-    private int lastEnemyIncrease;
-    private int enemyIncreaseTimer = 2000;
-
     public Arena(Game myGame) : base("Arenav2_2.png")
     {
+        EnemySpawnPoint.EnemySpawned += IncreaseNumberOfEnemiesAlive;
+        Enemy.EnemyDestroyed += DecreaseNumberOfEnemiesAlive;
+
+        CanSpawnMoreEnemies = true;
+
+        NumberOfEnemies = 0;
+
         width = myGame.width;
         height = myGame.height;
         AddChild(_player = new Player(width / 2, height / 2));
@@ -87,6 +102,25 @@ class Arena : Sprite
         }
     }
 
+    private void IncreaseNumberOfEnemiesAlive()
+    {
+        NumberOfEnemies++;
+        if(NumberOfEnemies >= maxEnemiesAlive)
+        {
+            CanSpawnMoreEnemies = false;
+        }
+    }
+
+    private void DecreaseNumberOfEnemiesAlive()
+    {
+        NumberOfEnemies--;
+
+        if (NumberOfEnemies < maxEnemiesAlive)
+        {
+            CanSpawnMoreEnemies = true;
+        }
+    }
+
     private void UpdateDifficulty()
     {
         Console.WriteLine("Updated Difficulty");
@@ -105,12 +139,18 @@ class Arena : Sprite
         {
             int minEnemyNumber = enemySpawnPoints.Min(r => r.EnemiesToSpawn);
             enemySpawnPoints.Where(r => r.EnemiesToSpawn == minEnemyNumber).First().IncreaseEnemies(1);
-            Console.WriteLine("Increased number of enemies to spawn");
+            //Console.WriteLine("Increased number of enemies to spawn");
             lastEnemyIncrease = Time.now;
         }
         catch
         {
             throw new NullReferenceException();
         }
+    }
+
+    protected override void OnDestroy()
+    {
+        EnemySpawnPoint.EnemySpawned -= IncreaseNumberOfEnemiesAlive;
+        Enemy.EnemyDestroyed -= DecreaseNumberOfEnemiesAlive;
     }
 }

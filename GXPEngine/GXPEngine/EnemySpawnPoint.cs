@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using GXPEngine;
 using GXPEngine.Enemies;
@@ -9,7 +10,10 @@ class EnemySpawnPoint : Sprite
 
     private int _lastSpawnTime; // last time enemy spawned 
     private int _spawnTimer = 10000; // countdown time in milliseconds 
-    public int EnemiesToSpawn { get; private set; } = 1;
+    public int EnemiesToSpawn { get; private set; } = 1; //The amount of enemies to spawn per _spawnTimer per spawn point
+    private int maxEnemiesToSpawn = 4; //The maximum amount of enemies to spawn per _spawnTimer per spawn point
+
+    public static event Action EnemySpawned;
 
     public EnemySpawnPoint(float px, float py, Player player) : base("circle.png")
     {
@@ -29,18 +33,24 @@ class EnemySpawnPoint : Sprite
     // spawns an enemy 
     public void SpawnEnemy()
     {
-
-        switch (Arena.RandomEnemy)
+        if (Arena.CanSpawnMoreEnemies)
         {
-            case 0:
-                new SlowEnemy(x, y, _player);
-                break;
-            case 1:
-                new FastEnemy(x, y, _player);
-                break;
-            case 2:
-                new HomingEnemy(x, y, _player);
-                break;
+            switch (Arena.RandomEnemy)
+            {
+                case 0:
+                    new SlowEnemy(x, y, _player);
+                    break;
+                case 1:
+                    new FastEnemy(x, y, _player);
+                    break;
+                case 2:
+                    new HomingEnemy(x, y, _player);
+                    break;
+                default:
+                    return;
+            }
+
+            EnemySpawned.Invoke();
         }
     }
 
@@ -56,6 +66,11 @@ class EnemySpawnPoint : Sprite
 
     public void IncreaseEnemies(int increase)
     {
-        EnemiesToSpawn += increase;
+        if(EnemiesToSpawn < maxEnemiesToSpawn)
+        {
+            EnemiesToSpawn += increase;
+        }
+
+        Console.WriteLine(EnemiesToSpawn);
     }
 }

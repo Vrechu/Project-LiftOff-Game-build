@@ -52,6 +52,8 @@ namespace GXPEngine
         private GameObject target; //The target the enemy is following
         private LineOfSight lineOfSight;
 
+        public static event Action EnemyDestroyed;
+
         //The position in Vec2
         private Vec2 Position
         {
@@ -297,6 +299,7 @@ namespace GXPEngine
         protected override void OnDestroy()
         {
             GameManager.OnPlayerDeath -= StopMoving;
+            EnemyDestroyed.Invoke();
             base.OnDestroy();
         }
     }
