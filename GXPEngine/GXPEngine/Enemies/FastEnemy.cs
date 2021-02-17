@@ -35,6 +35,8 @@ namespace GXPEngine.Enemies
             deathAnimationFrameCount = 6;
             deathFrame = 17;
 
+            enemyType = EnemyType.FAST;
+
             SetHitbox(hitboxXOffset, hitboxYOffset);
             SetDropShadow("DropShadow.png", 119, 25, 10, 55);
             SetAnimation("EnemyFast.png", 5, 4);

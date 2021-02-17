@@ -41,12 +41,14 @@ namespace GXPEngine
             protected int deathAnimationStartFrame = 12;
             protected int deathAnimationFrameCount = 6;
             protected int deathFrame = 17;
+
+            protected EnemyType enemyType = EnemyType.SLOW;
         #endregion
 
         //============= EVENTS =============
         #region
             public static event Action OnEnemyDestroyed; //When the enemy is destroyed
-            public static event Action OnHit; //When the enemy is hit
+            public static event Action<EnemyType> OnHit; //When the enemy is hit
         #endregion
 
         private int projectileShotTime; //The last time the enemy shot a projectile
@@ -273,7 +275,7 @@ namespace GXPEngine
         {
             isDying = true;
             GameManager.Singleton._playerScore += scoreWorth;
-            OnHit?.Invoke();
+            OnHit?.Invoke(enemyType);
         }
 
         private void Dying()
@@ -307,7 +309,7 @@ namespace GXPEngine
         protected override void OnDestroy()
         {
             GameManager.OnPlayerDeath -= StopMoving;
-            OnEnemyDestroyed.Invoke();
+            OnEnemyDestroyed?.Invoke();
             base.OnDestroy();
         }
     }

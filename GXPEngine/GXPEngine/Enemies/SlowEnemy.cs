@@ -1,4 +1,5 @@
-﻿using GXPEngine.Projectiles;
+﻿using GXPEngine.Enemies;
+using GXPEngine.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace GXPEngine
             deathAnimationStartFrame = 12;
             deathAnimationFrameCount = 6;
             deathFrame = 17;
+
+            enemyType = EnemyType.SLOW;
 
             SetHitbox(hitboxXOffset, hitboxYOffset);
             SetDropShadow("DropShadow.png", 119, 25, 10, 55);

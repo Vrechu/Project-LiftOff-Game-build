@@ -35,6 +35,8 @@ namespace GXPEngine.Enemies
             deathAnimationFrameCount = 7;
             deathFrame = 15;
 
+            enemyType = EnemyType.HOMING;
+
             SetHitbox(hitboxXOffset, hitboxYOffset);
             SetDropShadow("DropShadow.png", 100, 25, 10, 55);
             SetAnimation("EnemyHoming.png", 4, 4);
