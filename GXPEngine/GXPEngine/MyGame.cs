@@ -21,6 +21,7 @@ public class MyGame : Game
         AddChild(GameManager.Singleton);
 
         Player.OnDeathAnimationEnd += GameOver;
+
     }
 
     void OnDestroy()

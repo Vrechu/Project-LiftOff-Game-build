@@ -7,7 +7,8 @@ using GXPEngine;
 
 class Arena : Sprite
 {
-    Player _player;
+    private Player _player;
+    private Sprite _arenaWalls;
 
     /// <summary>
     /// The odds for each enemy to spawn
@@ -57,7 +58,7 @@ class Arena : Sprite
 
     private EnemySpawnPoint[] enemySpawnPoints;
 
-    public Arena(Game myGame) : base("Arenav2_2.png")
+    public Arena(Game myGame) : base("Arenav3.png")
     {
         EnemySpawnPoint.EnemySpawned += IncreaseNumberOfEnemiesAlive;
         Enemy.EnemyDestroyed += DecreaseNumberOfEnemiesAlive;
@@ -77,11 +78,12 @@ class Arena : Sprite
             new EnemySpawnPoint(120, height, _player),
             new EnemySpawnPoint(width - 120, height, _player)
         };
+        AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
 
-        AddChild(new HUD(game.width, game.height));
+        AddChild(new HUD(game.width, game.height));      
 
-        AddChild(new Wall(0, 200, width, 30));
-        AddChild(new Wall(0, height - 100, width, 30));
+        AddChild(new Wall(0, 220, width, 30));
+        AddChild(new Wall(0, height - 10, width, 30));
         AddChild(new Wall(0, 0, 10, height));
         AddChild(new Wall(width - 180, 0, 10, height));
 
