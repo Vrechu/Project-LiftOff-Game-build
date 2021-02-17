@@ -9,7 +9,9 @@ class AudioPlayer : GameObject
 {
     MyGame _myGame;
     SoundChannel _musicChannel;
-    Sound _music;
+    Sound _gameMusic;
+    Sound _menuMusic;
+    Sound _comicMusic;
     SoundChannel _effectsChannel;
     Sound _effect;
 
@@ -17,6 +19,9 @@ class AudioPlayer : GameObject
     {
         _myGame = myGame;
         EventSubscriptions();
+        _gameMusic = new Sound("test_music.mp3");
+        _menuMusic = new Sound("test_music.mp3");
+        _comicMusic = new Sound("test_music.mp3");
     }
 
     private void EventSubscriptions()
@@ -100,20 +105,18 @@ class AudioPlayer : GameObject
         {
             case MyGame.ScreenState.INGAME:
                 {
-                    _music = new Sound("test_music.mp3");
-                    _musicChannel = _music.Play();
+                    
+                    _musicChannel = _gameMusic.Play();
                     break;
                 }
             case MyGame.ScreenState.MENU:
                 {
-                    _music = new Sound("ping.wav");
-                    _musicChannel = _music.Play();
+                    _musicChannel = _menuMusic.Play();
                     break;
                 }
             case MyGame.ScreenState.COMIC:
                 {
-                    _music = new Sound("bone_throw1.wav");
-                    _musicChannel = _music.Play();
+                    _musicChannel = _comicMusic.Play();
                     break;
                 }
 
