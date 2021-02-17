@@ -1,4 +1,6 @@
 ﻿using GXPEngine.Core;
+using GXPEngine.Projectiles;
+using System;
 using System.Drawing;
 using System.Security.Policy;
 
@@ -6,19 +8,30 @@ namespace GXPEngine
 {
     abstract class Projectile : Sprite
     {
-        protected float moveSpeed = 5f; //The speed at which the projectile moves
+        //========== OVERRIDEABLE ==========
+        #region
+            protected float moveSpeed = 5f; //The speed at which the projectile moves
 
-        protected int shootAnimationStartFrame = 0;
-        protected int shootAnimationFrameCount = 2;
+            protected int shootAnimationStartFrame = 0;
+            protected int shootAnimationFrameCount = 2;
 
-        protected int hitboxXOffset = 0;
-        protected int hitboxYOffset = 0;
+            protected int hitboxXOffset = 0;
+            protected int hitboxYOffset = 0;
 
-        protected int explosionAnimationFrame = 2;
+            protected int explosionAnimationFrame = 2;
+            private int explosionDuration = 200;
+        #endregion
+
+        //============= EVENTS =============
+        #region
+            public static event Action OnShot; //When the projectile is shot
+            public static event Action OnExplode; //When the projectile explodes
+        #endregion
 
         private bool isExploding = false;
         private int explosionStartTime;
-        private int explosionDuration = 200;
+
+        public ProjectileType projectileType = ProjectileType.SLOW;
 
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
@@ -149,6 +162,7 @@ namespace GXPEngine
             x = spawnX;
             y = spawnY;
             game.AddChild(this);
+            OnShot.Invoke();
         }
 
         /// <summary>
@@ -171,6 +185,7 @@ namespace GXPEngine
             isExploding = true;
             projectileAnimation.SetCycle(explosionAnimationFrame);
             explosionStartTime = Time.now;
+            OnExplode.Invoke();
         }
     }
 }

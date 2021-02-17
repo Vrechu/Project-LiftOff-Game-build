@@ -16,6 +16,8 @@ namespace GXPEngine.Projectiles
 
             explosionAnimationFrame = 2;
 
+            projectileType = ProjectileType.FAST;
+
             hitboxXOffset = 0;
             hitboxYOffset = 22;
 

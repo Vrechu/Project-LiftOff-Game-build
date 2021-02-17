@@ -60,8 +60,8 @@ class Arena : Sprite
 
     public Arena(Game myGame) : base("Arenav3.png")
     {
-        EnemySpawnPoint.EnemySpawned += IncreaseNumberOfEnemiesAlive;
-        Enemy.EnemyDestroyed += DecreaseNumberOfEnemiesAlive;
+        EnemySpawnPoint.OnEnemySpawned += IncreaseNumberOfEnemiesAlive;
+        Enemy.OnEnemyDestroyed += DecreaseNumberOfEnemiesAlive;
 
         CanSpawnMoreEnemies = true;
 
@@ -152,7 +152,7 @@ class Arena : Sprite
 
     protected override void OnDestroy()
     {
-        EnemySpawnPoint.EnemySpawned -= IncreaseNumberOfEnemiesAlive;
-        Enemy.EnemyDestroyed -= DecreaseNumberOfEnemiesAlive;
+        EnemySpawnPoint.OnEnemySpawned -= IncreaseNumberOfEnemiesAlive;
+        Enemy.OnEnemyDestroyed -= DecreaseNumberOfEnemiesAlive;
     }
 }

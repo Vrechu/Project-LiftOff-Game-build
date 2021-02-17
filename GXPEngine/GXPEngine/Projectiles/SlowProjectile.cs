@@ -15,6 +15,8 @@ namespace GXPEngine.Projectiles
             shootAnimationStartFrame = 0;
             shootAnimationFrameCount = 2;
 
+            projectileType = ProjectileType.SLOW;
+
             explosionAnimationFrame = 2;
 
             hitboxXOffset = 0;

@@ -13,7 +13,7 @@ class EnemySpawnPoint : Sprite
     public int EnemiesToSpawn { get; private set; } = 1; //The amount of enemies to spawn per _spawnTimer per spawn point
     private int maxEnemiesToSpawn = 4; //The maximum amount of enemies to spawn per _spawnTimer per spawn point
 
-    public static event Action EnemySpawned;
+    public static event Action OnEnemySpawned;
 
     public EnemySpawnPoint(float px, float py, Player player) : base("circle.png")
     {
@@ -50,7 +50,7 @@ class EnemySpawnPoint : Sprite
                     return;
             }
 
-            EnemySpawned.Invoke();
+            OnEnemySpawned.Invoke();
         }
     }
 

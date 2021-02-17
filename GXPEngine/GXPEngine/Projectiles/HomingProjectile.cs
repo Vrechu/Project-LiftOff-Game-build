@@ -16,6 +16,8 @@ namespace GXPEngine.Projectiles
 
             explosionAnimationFrame = 0;
 
+            projectileType = ProjectileType.HOMING;
+
             hitboxXOffset = 1;
             hitboxYOffset = 1;
 
