@@ -66,6 +66,7 @@ class Arena : Sprite
     public static int NumberOfEnemies;
 
     private EnemySpawnPoint[] enemySpawnPoints;
+    private Sprite mouseCursor;
 
     public Arena(Game myGame) : base("Arenav3.png")
     {
@@ -76,8 +77,14 @@ class Arena : Sprite
 
         NumberOfEnemies = 0;
 
-        width = myGame.width;
-        height = myGame.height;
+        mouseCursor = new Sprite("SummoningCircle.png");
+        mouseCursor.SetOrigin(mouseCursor.width / 2, mouseCursor.height / 2);
+        mouseCursor.width = 119;
+        mouseCursor.height = 50;
+        AddChild(mouseCursor);
+
+        //width = myGame.width;
+        //height = myGame.height;
         AddChild(_player = new Player(width / 2, height / 2));
 
         for(int i = 0; i < EnemySpawnChance.Length / 2; i++)
@@ -123,6 +130,8 @@ class Arena : Sprite
         {
             IncreaseEnemyCount();
         }
+
+        FollowCursor();
     }
 
     private void IncreaseNumberOfEnemiesAlive()
@@ -169,6 +178,11 @@ class Arena : Sprite
         {
             throw new NullReferenceException();
         }
+    }
+
+    private void FollowCursor()
+    {
+        mouseCursor.SetXY(Input.mouseX, Input.mouseY);
     }
 
     protected override void OnDestroy()
