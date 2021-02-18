@@ -56,6 +56,8 @@ namespace GXPEngine
         private bool isDying = false;
         private bool canMove = true;
 
+        private EnemyState enemyState = EnemyState.IDLE;
+
         private ProjectileLauncher projectileManager; //The projectile that's charging
         private EnemyAnimation enemyAnimation;
         private Sprite dropShadow;
@@ -168,7 +170,7 @@ namespace GXPEngine
                 //Otherwise if the enemy is idle
                 else
                 {
-                    enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
+                    enemyState = EnemyState.IDLE;
                 }
 
                 //If the cooldown has run out
@@ -187,11 +189,13 @@ namespace GXPEngine
                     FaceLeft(true);
                 }
             }
+
+            SetAnimationCycle(enemyState);
         }
 
         private void StartFiring()
         {
-            enemyAnimation.SetAnimationCycle(shootAnimationStartFrame, shootAnimationFrameCount, shootAnimationTime);
+            enemyState = EnemyState.SHOOTING;
             isFiring = true;
         }
 
@@ -246,7 +250,7 @@ namespace GXPEngine
         private void MoveInDirection(Vec2 moveDirection)
         {
             StopFiring();
-            enemyAnimation.SetAnimationCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
+            enemyState = EnemyState.WALKING;
             moveDirection.Normalize();
             MoveUntilCollision(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed, dropShadow, game.FindObjectsOfType<Wall>()); //Move 'moveSpeed' units towards the move direction
             //Position += moveDirection * moveSpeed; 
@@ -270,6 +274,26 @@ namespace GXPEngine
         private void StopMoving()
         {
             canMove = false;
+            enemyState = EnemyState.IDLE;
+        }
+
+        private void SetAnimationCycle(EnemyState newEnemyState)
+        {
+            switch (newEnemyState)
+            {
+                case EnemyState.IDLE:
+                    enemyAnimation.SetAnimationCycle(idleAnimationStartFrame, idleAnimationFrameCount, animationFrameTime);
+                    break;
+                case EnemyState.WALKING:
+                    enemyAnimation.SetAnimationCycle(walkAnimationStartFrame, walkAnimationFrameCount, animationFrameTime);
+                    break;
+                case EnemyState.SHOOTING:
+                    enemyAnimation.SetAnimationCycle(shootAnimationStartFrame, shootAnimationFrameCount, shootAnimationTime);
+                    break;
+                case EnemyState.DYING:
+                    enemyAnimation.SetAnimationCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameTime);
+                    break;
+            }
         }
 
         private void Die()
@@ -281,7 +305,7 @@ namespace GXPEngine
 
         private void Dying()
         {
-            enemyAnimation.SetAnimationCycle(deathAnimationStartFrame, deathAnimationFrameCount, animationFrameTime);
+            enemyState = EnemyState.DYING;
             if (enemyAnimation.currentFrame == deathFrame)
             {
                 LateDestroy();

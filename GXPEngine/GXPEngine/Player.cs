@@ -23,6 +23,9 @@ class Player : Sprite
     int _maxHurtAnimationLoops = 1;             //amount of time the hurt animation loops
     private float _shieldSpriteOffset = 8;          //the offset of the shield sprites
 
+    private int deathTime;
+    private int deathLength = 1500;
+
     public static event Action OnDeathAnimationEnd;         //death animation end event
     private Sprite dropShadow;              //shadow sprite
 
@@ -30,7 +33,7 @@ class Player : Sprite
 
     public enum PlayerState
     {
-        WALKING, IDLE, HURT, DYING
+        WALKING, IDLE, HURT, DYING, DEAD
     }
     public PlayerState _playerState = PlayerState.IDLE;
 
@@ -69,6 +72,7 @@ class Player : Sprite
         InvertAnimationSprite();
         RevertPlayerHurt();
         DeathAnimationEnd();
+        RemainDead();
     }
 
     // processes movement imputs
@@ -103,7 +107,7 @@ class Player : Sprite
         _playerDirection = up + down + left + right;
         _playerDirection.Normalize();
 
-        if (_playerState != PlayerState.DYING)
+        if (_playerState != PlayerState.DYING && _playerState != PlayerState.DEAD)
         {
             if (_playerDirection.Length() == 0.0)
             {
@@ -127,10 +131,13 @@ class Player : Sprite
     // moves the player
     void UpdatePlayerScreenPosition()
     {
-        MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, dropShadow, game.FindObjectsOfType<Wall>());
+        if(_playerState != PlayerState.DYING && _playerState != PlayerState.DEAD)
+        {
+            MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, dropShadow, game.FindObjectsOfType<Wall>());
 
-        _playerPosition.x = x;
-        _playerPosition.y = y;
+            _playerPosition.x = x;
+            _playerPosition.y = y;
+        }
     }
 
     //collision method
@@ -138,6 +145,7 @@ class Player : Sprite
     {
         if (_playerState != PlayerState.HURT            //if player is not in hurt or dying state
                 && _playerState != PlayerState.DYING
+                && _playerState != PlayerState.DEAD
             && (other is Projectile))
         {
             Projectile projectile = other as Projectile;        //set projectile to exploding
@@ -179,6 +187,11 @@ class Player : Sprite
                 case PlayerState.DYING:
                     {
                         _playerAnimations.SetCycle(0, 7, _playerAnimationTime);
+                        break;
+                    }
+                case PlayerState.DEAD:
+                    {
+                        _playerAnimations.SetCycle(6, 1, _playerAnimationTime);
                         break;
                     }
             }
@@ -236,7 +249,19 @@ class Player : Sprite
         if (_playerState == PlayerState.DYING
             && _playerAnimations.currentFrame == 6)
         {
-            OnDeathAnimationEnd?.Invoke();
+            SetPlayerState(PlayerState.DEAD);
+            deathTime = Time.now;
+        }
+    }
+
+    private void RemainDead()
+    {
+        if(_playerState == PlayerState.DEAD)
+        {
+            if (Time.now >= deathTime + deathLength)
+            {
+                OnDeathAnimationEnd?.Invoke();
+            }
         }
     }
 
