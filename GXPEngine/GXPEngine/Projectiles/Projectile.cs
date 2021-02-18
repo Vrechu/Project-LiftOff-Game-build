@@ -75,6 +75,8 @@ namespace GXPEngine
 
         private void Initialize()
         {
+            GameManager.OnPlayerDeath += Dissapear;
+
             color = 0x00ff06;
             alpha = 0;
 
@@ -226,7 +228,7 @@ namespace GXPEngine
         {
             if (Time.now >= explosionStartTime + explosionDuration)
             {
-                LateDestroy();
+                Dissapear();
             }
         }
 
@@ -244,6 +246,16 @@ namespace GXPEngine
                 explosionStartTime = Time.now;
                 OnExplode?.Invoke(projectileType);
             }
+        }
+
+        private void Dissapear()
+        {
+            LateDestroy();
+        }
+
+        public void OnDestroy()
+        {
+            GameManager.OnPlayerDeath -= Dissapear;
         }
     }
 }

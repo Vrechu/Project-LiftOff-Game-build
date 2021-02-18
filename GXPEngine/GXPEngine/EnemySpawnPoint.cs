@@ -12,14 +12,17 @@ class EnemySpawnPoint : Sprite
         public int EnemiesToSpawn { get; private set; } = 1; //The amount of enemies to spawn per _spawnTimer per spawn point
         private int minWaitTime = 500;
         private int maxWaitTime = 5000;
+
+        private int maxEnemiesToSpawn = 4; //The maximum amount of enemies to spawn per _spawnTimer per spawn point
     #endregion
 
     private Player _player; // target of enemies 
 
     private int _lastSpawnTime; // last time enemy spawned 
-    private int maxEnemiesToSpawn = 4; //The maximum amount of enemies to spawn per _spawnTimer per spawn point
 
     public static event Action OnEnemySpawned;
+
+    private bool canSpawnEnemies = true;
 
     public EnemySpawnPoint(float px, float py, Player player) : base("circle.png")
     {

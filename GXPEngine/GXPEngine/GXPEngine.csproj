@@ -40,6 +40,7 @@
     <Compile Include="AudioPlayer.cs" />
     <Compile Include="Cutscene.cs" />
     <Compile Include="Enemies\EnemyAnimation.cs" />
+    <Compile Include="Enemies\EnemyState.cs" />
     <Compile Include="Enemies\EnemyType.cs" />
     <Compile Include="Enemies\FastEnemy.cs" />
     <Compile Include="Enemies\HomingEnemy.cs" />

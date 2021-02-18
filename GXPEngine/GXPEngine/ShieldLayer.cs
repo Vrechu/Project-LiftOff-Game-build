@@ -32,7 +32,10 @@ class ShieldLayer : Sprite
     // sets the rotation of the shield to face the mouse position
     void UpdateRotation()
     {
-        rotation = shieldDirectionVector.GetAngleDegrees();
+        if(_player._playerState != Player.PlayerState.DYING && _player._playerState != Player.PlayerState.DEAD)
+        {
+            rotation = shieldDirectionVector.GetAngleDegrees();
+        }
     }
 }
 

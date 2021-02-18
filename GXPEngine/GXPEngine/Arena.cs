@@ -80,6 +80,8 @@ class Arena : Sprite
     {
         EnemySpawnPoint.OnEnemySpawned += IncreaseNumberOfEnemiesAlive;
         Enemy.OnEnemyDestroyed += DecreaseNumberOfEnemiesAlive;
+        GameManager.OnPlayerDeath += StopSpawning;
+
         _myGame = myGame;
         CanSpawnMoreEnemies = true;
 
@@ -156,7 +158,7 @@ class Arena : Sprite
         NumberOfEnemies++;
         if (NumberOfEnemies >= maxEnemiesAlive)
         {
-            CanSpawnMoreEnemies = false;
+            StopSpawning();
         }
     }
 
@@ -206,6 +208,7 @@ class Arena : Sprite
     {
         EnemySpawnPoint.OnEnemySpawned -= IncreaseNumberOfEnemiesAlive;
         Enemy.OnEnemyDestroyed -= DecreaseNumberOfEnemiesAlive;
+        GameManager.OnPlayerDeath -= StopSpawning;
     }
 
     private void AnimateArena()
@@ -233,5 +236,10 @@ class Arena : Sprite
             }
             canInvert = false;
         }
+    }
+
+    private void StopSpawning()
+    {
+        CanSpawnMoreEnemies = false;
     }
 }
