@@ -33,7 +33,7 @@ class Arena : Sprite
 
     private int[] defaultSpawnChance = new int[]
     {
-        400, 100,  0
+        400, 100, 0
     };
 
     private int lastDifficultyIncrease; //The last time the enemySpawnChance was updated
@@ -107,7 +107,7 @@ class Arena : Sprite
         };
         AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
 
-        AddChild(new Wall(0, 320, width, 10));
+        AddChild(new Wall(0, 0, width, 330));
         AddChild(new Wall(0, height, width, 30));
         AddChild(new Wall(-5, 0, 10, height));
         AddChild(new Wall(width - 5, 0, 10, height));

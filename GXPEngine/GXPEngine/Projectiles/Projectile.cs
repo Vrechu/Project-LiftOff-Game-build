@@ -1,6 +1,7 @@
 ﻿using GXPEngine.Core;
 using GXPEngine.Projectiles;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Policy;
 
@@ -38,11 +39,12 @@ namespace GXPEngine
         protected GameObject source; //The source object that the projectile came from
         protected GameObject target;
         public bool IsLethal { get; private set; } = false;
+        public bool InWall { get; private set; } = false;
 
         private AnimationSprite projectileAnimation;
         private Sprite dropShadow;
 
-        private Vec2 moveDirection;
+        public Vec2 MoveDirection { get; private set; }
 
         //The position in Vector2
         private Vec2 Position
@@ -94,10 +96,12 @@ namespace GXPEngine
             AddChild(projectileAnimation);
         }
 
-        protected void SetShadow(string shadowSprite, int spritewidth, int spriteHeight)
+        protected void SetShadow(string shadowSprite, int spritewidth, int spriteHeight, uint color)
         {
             dropShadow = new Sprite(shadowSprite);
-            dropShadow.SetOrigin(dropShadow.width / 2, -dropShadow.height + 22);
+            dropShadow.color = color;
+            dropShadow.alpha = 0.5f;
+            dropShadow.SetOrigin(dropShadow.width / 2, -dropShadow.height - 50);
             dropShadow.width = spritewidth;
             dropShadow.height = spriteHeight;
             AddChild(dropShadow);
@@ -111,6 +115,11 @@ namespace GXPEngine
                 CheckIfLeftSource();
             }
 
+            if (InWall)
+            {
+                CheckIfLeftWall();
+            }
+
             if (isExploding)
             {
                 WhileExploding();
@@ -122,12 +131,7 @@ namespace GXPEngine
                     RotateTowardsObject(target);
                 }
 
-                Collision col = MoveUntilCollision(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed, dropShadow, game.FindObjectsOfType<Wall>()); //Move in the fired direction
-
-                if (col != null)
-                {
-                    StartExploding();
-                }
+                Move(moveSpeed, 0);
             }
 
             projectileAnimation.Animate();
@@ -147,8 +151,8 @@ namespace GXPEngine
         {
             if (!isExploding)
             {
-                moveDirection = targetRotation;
-                moveDirection.Normalize();
+                MoveDirection = targetRotation;
+                MoveDirection.Normalize();
 
                 rotation = targetRotation.GetAngleDegrees(); //Set the rotation
                 if (dropShadow != null)
@@ -182,8 +186,29 @@ namespace GXPEngine
                 HasLeftSource = true;
         }
 
+        private void CheckIfLeftWall()
+        {
+            foreach(Wall wall in game.FindObjectsOfType<Wall>())
+            {
+                if (HitTest(wall))
+                {
+                    return;
+                }
+            }
+
+            InWall = false;
+        }
+
         public void Spawn(float spawnX, float spawnY)
         {
+            foreach(Wall wall in game.FindObjectsOfType<Wall>())
+            {
+                if (HitTest(wall))
+                {
+                    InWall = true;
+                }
+            }
+
             x = spawnX;
             y = spawnY;
             game.AddChild(this);

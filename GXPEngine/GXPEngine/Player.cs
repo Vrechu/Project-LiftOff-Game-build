@@ -244,6 +244,7 @@ class Player : Sprite
     protected void SetDropShadow(string shadowSprite, int spriteWidth, int spriteHeight, int xOffset, int yOffset)
     {
         dropShadow = new Sprite(shadowSprite);
+        dropShadow.color = 0x000000;
         dropShadow.SetOrigin(dropShadow.width / 2, dropShadow.height / 2);
         dropShadow.width = spriteWidth;
         dropShadow.height = spriteHeight;
