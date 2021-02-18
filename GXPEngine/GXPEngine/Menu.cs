@@ -19,11 +19,11 @@ class Menu : Sprite
         
         AddChild(_highScoreBoard = new Sprite("HighScoreBoard.png"));
         _highScoreBoard.SetOrigin(_highScoreBoard.width / 2, 0);
-        _highScoreBoard.SetXY(width/2, -100);
+        _highScoreBoard.SetXY(width/2 - 600, -100);
 
         AddChild(_nextButton = new Sprite("Nextbutton.png"));
         _nextButton.SetOrigin(_nextButton.width / 2, _nextButton.height / 2);
-        _nextButton.SetXY(width / 2, height / 2);
+        _nextButton.SetXY(width / 2 + 50, height / 2);
         AddChild(new HUD(game.width, game.height, _myGame));
     }
 

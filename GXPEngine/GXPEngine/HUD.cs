@@ -30,7 +30,7 @@ namespace GXPEngine
             rightAlignment = new StringFormat();
             rightAlignment.Alignment = StringAlignment.Far;
 
-            menuFont = new Font(FontFamily.GenericSansSerif, 60f);            
+            menuFont = new Font(FontFamily.GenericSansSerif, 60f);
         }
 
         public void Update()
@@ -47,7 +47,7 @@ namespace GXPEngine
                     }
                 case MyGame.ScreenState.MENU:
                     {
-                        graphics.DrawString("" + GameManager.Singleton._highScore, menuFont, Brushes.White, width/2-40, 130, leftAlignment);
+                        graphics.DrawString("" + GameManager.Singleton._highScore, menuFont, Brushes.White, width/2-642, 130, leftAlignment);
                         _healthIndicator.alpha = 0;
                         break;
                     }
