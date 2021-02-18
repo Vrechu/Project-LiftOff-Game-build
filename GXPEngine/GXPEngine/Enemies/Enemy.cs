@@ -14,41 +14,41 @@ namespace GXPEngine
     {
         //========== OVERRIDEABLE ==========
         #region
-            protected float moveSpeed = 2f; //The move speed of the enemy
-            protected float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
-            protected int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
-            protected int scoreWorth = 1; //The amount of points the enemy is worth
+        protected float moveSpeed = 2f; //The move speed of the enemy
+        protected float distanceFromTarget = 400f; //The enemy moves towards a target until they are this distance away
+        protected int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
+        protected int scoreWorth = 1; //The amount of points the enemy is worth
 
-            protected int hitboxXOffset = 0;
-            protected int hitboxYOffset = 0;
+        protected int hitboxXOffset = 0;
+        protected int hitboxYOffset = 0;
 
-            protected int projectileLauncherXOffset = 0;
-            protected int projectileLauncherYOffset = 0;
+        protected int projectileLauncherXOffset = 0;
+        protected int projectileLauncherYOffset = 0;
 
-            protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
+        protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
 
-            protected int idleAnimationStartFrame = 0;
-            protected int idleAnimationFrameCount = 1;
+        protected int idleAnimationStartFrame = 0;
+        protected int idleAnimationFrameCount = 1;
 
-            protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
-            protected int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
-            protected int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
-            protected int shootFrame = 4; //The frame at which a projectile is shot
+        protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
+        protected int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
+        protected int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
+        protected int shootFrame = 4; //The frame at which a projectile is shot
 
-            protected int walkAnimationStartFrame = 7;
-            protected int walkAnimationFrameCount = 5;
+        protected int walkAnimationStartFrame = 7;
+        protected int walkAnimationFrameCount = 5;
 
-            protected int deathAnimationStartFrame = 12;
-            protected int deathAnimationFrameCount = 6;
-            protected int deathFrame = 17;
+        protected int deathAnimationStartFrame = 12;
+        protected int deathAnimationFrameCount = 6;
+        protected int deathFrame = 17;
 
-            protected EnemyType enemyType = EnemyType.SLOW;
+        protected EnemyType enemyType = EnemyType.SLOW;
         #endregion
 
         //============= EVENTS =============
         #region
-            public static event Action OnEnemyDestroyed; //When the enemy is destroyed
-            public static event Action<EnemyType> OnHit; //When the enemy is hit
+        public static event Action OnEnemyDestroyed; //When the enemy is destroyed
+        public static event Action<EnemyType> OnHit; //When the enemy is hit
         #endregion
 
         private int projectileShotTime; //The last time the enemy shot a projectile
@@ -292,7 +292,7 @@ namespace GXPEngine
             if (other is Projectile && !isDying)
             {
                 Projectile projectile = other as Projectile;
-                if (projectile.HasLeftSource)
+                if (projectile.HasLeftSource || projectile.IsLethal)
                 {
                     Die();
                     projectile.StartExploding();

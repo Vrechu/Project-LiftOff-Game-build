@@ -10,22 +10,23 @@ namespace GXPEngine
     {
         //========== OVERRIDEABLE ==========
         #region
-            protected float moveSpeed = 5f; //The speed at which the projectile moves
+        protected float moveSpeed = 5f; //The speed at which the projectile moves
 
-            protected int shootAnimationStartFrame = 0;
-            protected int shootAnimationFrameCount = 2;
+        protected int shootAnimationStartFrame = 0;
+        protected int shootAnimationFrameCount = 2;
 
-            protected int hitboxXOffset = 0;
-            protected int hitboxYOffset = 0;
+        protected int hitboxXOffset = 0;
+        protected int hitboxYOffset = 0;
 
-            protected int explosionAnimationFrame = 2;
-            private int explosionDuration = 200;
+        protected int explosionAnimationFrame = 2;
+        private int explosionDuration = 200;
+        protected bool shouldHome = false;
         #endregion
 
         //============= EVENTS =============
         #region
-            public static event Action<ProjectileType> OnShot; //When the projectile is shot
-            public static event Action<ProjectileType> OnExplode; //When the projectile explodes
+        public static event Action<ProjectileType> OnShot; //When the projectile is shot
+        public static event Action<ProjectileType> OnExplode; //When the projectile explodes
         #endregion
 
         private bool isExploding = false;
@@ -36,10 +37,12 @@ namespace GXPEngine
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
         protected GameObject target;
-
-        protected bool shouldHome = false;
+        public bool IsLethal { get; private set; } = false;
 
         private AnimationSprite projectileAnimation;
+        private Sprite dropShadow;
+
+        private Vec2 moveDirection;
 
         //The position in Vector2
         private Vec2 Position
@@ -91,6 +94,15 @@ namespace GXPEngine
             AddChild(projectileAnimation);
         }
 
+        protected void SetShadow(string shadowSprite, int spritewidth, int spriteHeight)
+        {
+            dropShadow = new Sprite(shadowSprite);
+            dropShadow.SetOrigin(dropShadow.width / 2, -dropShadow.height + 22);
+            dropShadow.width = spritewidth;
+            dropShadow.height = spriteHeight;
+            AddChild(dropShadow);
+        }
+
         public void Update()
         {
             //If the projectile is fired
@@ -110,7 +122,12 @@ namespace GXPEngine
                     RotateTowardsObject(target);
                 }
 
-                Move(moveSpeed, 0); //Move in the fired direction
+                Collision col = MoveUntilCollision(moveDirection.x * moveSpeed, moveDirection.y * moveSpeed, dropShadow, game.FindObjectsOfType<Wall>()); //Move in the fired direction
+
+                if (col != null)
+                {
+                    StartExploding();
+                }
             }
 
             projectileAnimation.Animate();
@@ -119,6 +136,7 @@ namespace GXPEngine
         public void Reflect()
         {
             shouldHome = false;
+            BecomeLethal();
         }
 
         /// <summary>
@@ -129,7 +147,14 @@ namespace GXPEngine
         {
             if (!isExploding)
             {
+                moveDirection = targetRotation;
+                moveDirection.Normalize();
+
                 rotation = targetRotation.GetAngleDegrees(); //Set the rotation
+                if (dropShadow != null)
+                {
+                    dropShadow.rotation = -rotation;
+                }
             }
         }
 
@@ -178,6 +203,11 @@ namespace GXPEngine
             {
                 LateDestroy();
             }
+        }
+
+        public void BecomeLethal()
+        {
+            IsLethal = true;
         }
 
         public void StartExploding()

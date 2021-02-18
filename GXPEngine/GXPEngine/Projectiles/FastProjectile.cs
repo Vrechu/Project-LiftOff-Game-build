@@ -22,6 +22,7 @@ namespace GXPEngine.Projectiles
             hitboxYOffset = 22;
 
             SetHitbox();
+            SetShadow("DropShadow.png", 64, 12);
             SetAnimation("ProjectileFast.png", 3, 1, 3);
         }
 

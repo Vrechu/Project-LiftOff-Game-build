@@ -24,6 +24,7 @@ namespace GXPEngine.Projectiles
             shouldHome = true;
 
             SetHitbox();
+            SetShadow("DropShadow.png", 64, 15);
             SetAnimation("ProjectileHoming.png", 2, 2, 3);
         }
 

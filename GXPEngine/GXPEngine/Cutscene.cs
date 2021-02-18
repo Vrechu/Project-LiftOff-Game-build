@@ -13,7 +13,8 @@ namespace GXPEngine
         public Sprite[] images = new Sprite[]
         {
             new Sprite("Comic 1.png"),
-            new Sprite("Comic 2.png")
+            new Sprite("Comic 2.png"),
+            new Sprite("Comic 3.png")
         };
 
         private int currentImage = 0;
