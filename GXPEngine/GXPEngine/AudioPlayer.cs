@@ -19,7 +19,7 @@ class AudioPlayer : GameObject
         _myGame = myGame;
         EventSubscriptions();
         _gameMusic = new Sound("test_music.mp3", true ,true);
-        _menuMusic = new Sound("menu_music.mp3", true, true);
+        _menuMusic = new Sound("main_menu.wav", true, true);
         _comicMusic = new Sound("comic_music.mp3", true, true);
     }
 

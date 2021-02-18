@@ -9,8 +9,15 @@ class Arena : Sprite
 {
     private MyGame _myGame;
     private Player _player;
-    private Sprite _arenaWalls;
 
+    private Sprite _arenaWalls;
+    private AnimationSprite _leftCrowd;
+    private AnimationSprite _rightCrowd;
+    private AnimationSprite _duck;
+    private AnimationSprite _guards;
+    private byte animationLength = 10;
+    private bool canInvert = true;
+    private bool isInverted = false;
 
     private Sprite _scoreBoard;
     private Sprite _highScoreBoard;
@@ -86,7 +93,7 @@ class Arena : Sprite
 
         AddChild(_player = new Player(width / 2, height / 2));
 
-        for(int i = 0; i < EnemySpawnChance.Length / 2; i++)
+        for (int i = 0; i < EnemySpawnChance.Length / 2; i++)
         {
             EnemySpawnChance[0, i] = defaultSpawnChance[i];
         }
@@ -98,12 +105,22 @@ class Arena : Sprite
             new EnemySpawnPoint(120, height - 100, _player),
             new EnemySpawnPoint(width - 120, height - 100, _player)
         };
-        AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));     
+        AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
 
         AddChild(new Wall(0, 320, width, 10));
         AddChild(new Wall(0, height, width, 30));
         AddChild(new Wall(-5, 0, 10, height));
-        AddChild(new Wall(width -5, 0, 10, height));
+        AddChild(new Wall(width - 5, 0, 10, height));
+
+        AddChild(_leftCrowd = new AnimationSprite("left_rows.png", 3, 1, 3));
+        AddChild(_rightCrowd = new AnimationSprite("right_rows.png", 3, 1, 3));
+        AddChild(_duck = new AnimationSprite("duck.png", 4, 2, 8));
+        AddChild(_guards = new AnimationSprite("guards.png", 2, 1, 2));
+
+        _leftCrowd.SetCycle(0, 3, animationLength);
+        _rightCrowd.SetCycle(0, 3, animationLength);
+        _duck.SetCycle(0, 8, animationLength);
+        _guards.SetCycle(0, 2, 20);
 
         lastDifficultyIncrease = Time.now;
         lastEnemyIncrease = Time.now;
@@ -131,12 +148,13 @@ class Arena : Sprite
         }
 
         FollowCursor();
+        AnimateArena();
     }
 
     private void IncreaseNumberOfEnemiesAlive()
     {
         NumberOfEnemies++;
-        if(NumberOfEnemies >= maxEnemiesAlive)
+        if (NumberOfEnemies >= maxEnemiesAlive)
         {
             CanSpawnMoreEnemies = false;
         }
@@ -188,5 +206,32 @@ class Arena : Sprite
     {
         EnemySpawnPoint.OnEnemySpawned -= IncreaseNumberOfEnemiesAlive;
         Enemy.OnEnemyDestroyed -= DecreaseNumberOfEnemiesAlive;
+    }
+
+    private void AnimateArena()
+    {
+        _leftCrowd.Animate();
+        _rightCrowd.Animate();
+        _duck.Animate();
+        _guards.Animate();
+
+        if (_duck.currentFrame == 7)
+        {
+            canInvert = true;
+        }
+
+        if (_duck.currentFrame == 0 && canInvert == true)
+        {
+            if (!isInverted)
+            {
+                isInverted = true;
+                _duck.Mirror(true, false);
+            }
+            else if (isInverted)
+            {isInverted = false;
+                _duck.Mirror(false, false);
+            }
+            canInvert = false;
+        }
     }
 }
