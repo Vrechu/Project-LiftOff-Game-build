@@ -18,7 +18,7 @@ class AudioPlayer : GameObject
     {
         _myGame = myGame;
         EventSubscriptions();
-        _gameMusic = new Sound("test_music.mp3", true ,true);
+        _gameMusic = new Sound("battledrums.mp3", true ,true);
         _menuMusic = new Sound("main_menu.wav", true, true);
         _comicMusic = new Sound("comic_music.mp3", true, true);
     }
@@ -45,22 +45,26 @@ class AudioPlayer : GameObject
         Enemy.OnHit += PlayEnemyHitSound;
     }
 
+    // plays the sound effect for when the player is hurt
     private void PlayHurtSound()
     {
         new Sound("character_hit.wav").Play();
     }
 
+    // plays the sound effect for dying
     private void PlayDeathSound()
     {
         _musicChannel.Stop();
         new Sound("PlayerDead.wav").Play();
     }
 
+    // plays the sound effect for reflecting
     private void PlayReflectSound()
     {
         new Sound("reflect_sound.wav").Play();
     }
 
+    //plays sound effect depending on the projectile type
     private void PlayProjectileShotSound(ProjectileType projectileType)
     {
         switch (projectileType)
@@ -72,7 +76,7 @@ class AudioPlayer : GameObject
                 }
             case ProjectileType.FAST:
                 {
-                    new Sound("ping.wav").Play();
+                    new Sound("laser.wav").Play();
                     break;
                 }
             case ProjectileType.HOMING:
@@ -83,28 +87,30 @@ class AudioPlayer : GameObject
         }
     }
 
+    // playes a sound effect depending enemy type
     private void PlayEnemyHitSound(EnemyType enemyType)
     {
         switch (enemyType)
         {
             case EnemyType.SLOW:
                 {
-                    new Sound("fireball.wav").Play();
+                    new Sound("enemy_lizard.wav").Play();
                     break;
                 }
             case EnemyType.FAST:
                 {
-                    new Sound("ping.wav").Play();
+                    new Sound("enemy_lizard.wav").Play();
                     break;
                 }
             case EnemyType.HOMING:
                 {
-                    new Sound("bone_throw1.wav").Play();
+                    new Sound("enemy_bone.wav").Play();
                     break;
                 }
         }
     }
 
+    // plays music depending on the screen state
     void PlayMusic()
     {
         if (_musicChannel != null)
@@ -128,7 +134,6 @@ class AudioPlayer : GameObject
                     _musicChannel = _comicMusic.Play();
                     break;
                 }
-
         }
     }
 }
