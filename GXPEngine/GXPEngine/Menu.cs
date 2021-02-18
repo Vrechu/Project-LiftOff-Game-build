@@ -22,11 +22,12 @@ class Menu : Sprite
 
     void Update()
     {
-        clickButton();
+        ClickButton();
+        PressKey();
     }
         
     //on button  click start the game
-    private void clickButton()
+    private void ClickButton()
     {
         if (Input.GetMouseButtonDown(0)
             && _button.HitTestPoint(Input.mouseX, Input.mouseY)) // if mouse over button and clicked start level
@@ -34,6 +35,15 @@ class Menu : Sprite
             _mygame._screenState = MyGame.ScreenState.CUTSCENE;
             _mygame.loadScreens();
         }
+    }
+
+    private void PressKey()
+    {
+        if (Input.GetKeyDown(Key.SPACE))
+        {
+            _mygame._screenState = MyGame.ScreenState.CUTSCENE;
+            _mygame.loadScreens();
+        }        
     }
 }
 

@@ -10,6 +10,10 @@ class Arena : Sprite
     private Player _player;
     private Sprite _arenaWalls;
 
+
+    private Sprite _scoreBoard;
+    private Sprite _highScoreBoard;
+
     /// <summary>
     /// The odds for each enemy to spawn
     /// </summary>
@@ -78,9 +82,7 @@ class Arena : Sprite
             new EnemySpawnPoint(120, height - 100, _player),
             new EnemySpawnPoint(width - 120, height - 100, _player)
         };
-        AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
-
-        AddChild(new HUD(game.width, game.height));      
+        AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));     
 
         AddChild(new Wall(0, 320, width, 10));
         AddChild(new Wall(0, height, width, 30));
@@ -89,6 +91,15 @@ class Arena : Sprite
 
         lastDifficultyIncrease = Time.now;
         lastEnemyIncrease = Time.now;
+
+        AddChild(_scoreBoard = new Sprite("ScoreBoard.png"));
+        _scoreBoard.SetScaleXY(0.5f, 0.5f);
+        _scoreBoard.SetXY(0, -50);
+        AddChild(_highScoreBoard = new Sprite("HighScoreBoard.png"));
+        _highScoreBoard.SetScaleXY(0.5f, 0.5f);
+        _highScoreBoard.SetXY(_scoreBoard.width, -50);
+
+        AddChild(new HUD(game.width, game.height));
     }
 
     public void Update()

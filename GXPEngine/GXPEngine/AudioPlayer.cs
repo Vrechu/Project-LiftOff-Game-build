@@ -13,16 +13,14 @@ class AudioPlayer : GameObject
     Sound _gameMusic;
     Sound _menuMusic;
     Sound _comicMusic;
-    SoundChannel _effectsChannel;
-    Sound _effect;
 
     public AudioPlayer(MyGame myGame)
     {
         _myGame = myGame;
         EventSubscriptions();
         _gameMusic = new Sound("test_music.mp3", true ,true);
-        _menuMusic = new Sound("test_music.mp3", true, true);
-        _comicMusic = new Sound("test_music.mp3", true, true);
+        _menuMusic = new Sound("menu_music.mp3", true, true);
+        _comicMusic = new Sound("comic_music.mp3", true, true);
     }
 
     private void EventSubscriptions()
@@ -125,7 +123,7 @@ class AudioPlayer : GameObject
                     _musicChannel = _menuMusic.Play();
                     break;
                 }
-            case MyGame.ScreenState.COMIC:
+            case MyGame.ScreenState.CUTSCENE:
                 {
                     _musicChannel = _comicMusic.Play();
                     break;

@@ -145,7 +145,12 @@ class Player : Sprite
             GameManager.Singleton.PlayerGetsHit(1);             //player gets hit and loses health
             SetPlayerState(PlayerState.HURT);               //playerstate is hurt
             OnPLayerHit?.Invoke();
-        }      
+        }
+        else if(other is Projectile)
+        {
+            Projectile projectile = other as Projectile;        //set projectile to exploding
+            projectile.StartExploding();
+        }
         
     }
 
