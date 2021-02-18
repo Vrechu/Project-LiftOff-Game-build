@@ -29,6 +29,8 @@ class Player : Sprite
     public static event Action OnDeathAnimationEnd;         //death animation end event
     private Sprite dropShadow;              //shadow sprite
 
+    private ShieldLayer _shieldShadow;
+
     public static event Action OnPLayerHit;
 
     public enum PlayerState
@@ -52,10 +54,10 @@ class Player : Sprite
         y = py;
         AddChild(new Shield(this));
         SetDropShadow("DropShadow.png", 100, 25, 0, 60);
+        ShowShieldSprites();
         AddChild(_playerAnimations = new PlayerAnimations());
         alpha = 0;
         SetPlayerState(PlayerState.IDLE);
-        ShowShieldSprites();
         GameManager.OnPlayerDeath += DeathAnimation;
     }
 
@@ -215,6 +217,9 @@ class Player : Sprite
     //loads the shield sprites
     public void ShowShieldSprites()
     {
+        AddChild(_shieldShadow = new ShieldLayer("shield_shadow.png", this, _shieldSpriteOffset * 4));
+        _shieldShadow.color = 0xe36ff2;
+        _shieldShadow.alpha = 0.5f;
         AddChild(new ShieldLayer("Paint_layer_2.png", this, _shieldSpriteOffset * 2));
         AddChild(new ShieldLayer("Paint_layer_3.png", this, _shieldSpriteOffset));
         AddChild(new ShieldLayer("Paint_layer_4.png", this, 0));

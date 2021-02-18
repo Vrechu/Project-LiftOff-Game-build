@@ -92,6 +92,7 @@ class Arena : Sprite
         mouseCursor.width = 119;
         mouseCursor.height = 50;
         AddChild(mouseCursor);
+        AddChild(new Sprite("top_wall.png"));
 
         AddChild(_player = new Player(width / 2, height / 2));
 
