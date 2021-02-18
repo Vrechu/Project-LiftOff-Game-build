@@ -14,5 +14,13 @@ class Wall : Sprite
         height = pheight;
         alpha = 0;
     }
+
+    public void OnCollision(GameObject other)
+    {
+        if(other is Projectile newProjectile)
+        {
+            newProjectile.StartExploding();
+        }
+    }
 }
 

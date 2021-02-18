@@ -23,6 +23,11 @@ class Arena : Sprite
         {   0,  10, 15 }  //The amount the odds should increase by
     };
 
+    private int[] defaultSpawnChance = new int[]
+    {
+        400, 100,  0
+    };
+
     private int lastDifficultyIncrease; //The last time the enemySpawnChance was updated
     private int difficultyIncreaseTimer = 10000; //The amount of time before the enemySpawnChance is updated (milliseconds)
     private int lastEnemyIncrease; //The last time more enemies started spawning
@@ -74,6 +79,11 @@ class Arena : Sprite
         width = myGame.width;
         height = myGame.height;
         AddChild(_player = new Player(width / 2, height / 2));
+
+        for(int i = 0; i < EnemySpawnChance.Length / 2; i++)
+        {
+            EnemySpawnChance[0, i] = defaultSpawnChance[i];
+        }
 
         enemySpawnPoints = new EnemySpawnPoint[]
         {

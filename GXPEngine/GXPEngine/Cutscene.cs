@@ -8,6 +8,7 @@ namespace GXPEngine
     class Cutscene : Sprite
     {
         private MyGame _mygame;
+        private Sprite _nextButton;
 
         public Sprite[] images = new Sprite[]
         {
@@ -19,8 +20,12 @@ namespace GXPEngine
 
         public Cutscene(MyGame myGame) : base("checkers.png")
         {
-            SetImage(currentImage);
             _mygame = myGame;
+            _nextButton = new Sprite("NextButton.png");
+            _nextButton.scale = 0.25f;
+            _nextButton.SetXY(game.width - _nextButton.width - 50, game.height - _nextButton.height - 50);
+            AddChild(_nextButton);
+            SetImage(currentImage);
         }
 
         public void Update()
@@ -34,6 +39,7 @@ namespace GXPEngine
         private void SetImage(int i)
         {
             AddChild(images[i]);
+            SetChildIndex(_nextButton, 9999);
         }
 
         private void NextImage()

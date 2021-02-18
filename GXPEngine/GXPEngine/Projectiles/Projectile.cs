@@ -182,10 +182,13 @@ namespace GXPEngine
 
         public void StartExploding()
         {
-            isExploding = true;
-            projectileAnimation.SetCycle(explosionAnimationFrame);
-            explosionStartTime = Time.now;
-            OnExplode?.Invoke(projectileType);
+            if (!isExploding)
+            {
+                isExploding = true;
+                projectileAnimation.SetCycle(explosionAnimationFrame);
+                explosionStartTime = Time.now;
+                OnExplode?.Invoke(projectileType);
+            }
         }
     }
 }
