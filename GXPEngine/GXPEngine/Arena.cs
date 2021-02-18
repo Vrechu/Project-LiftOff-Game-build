@@ -7,6 +7,7 @@ using GXPEngine;
 
 class Arena : Sprite
 {
+    private MyGame _myGame;
     private Player _player;
     private Sprite _arenaWalls;
 
@@ -68,11 +69,11 @@ class Arena : Sprite
     private EnemySpawnPoint[] enemySpawnPoints;
     private Sprite mouseCursor;
 
-    public Arena(Game myGame) : base("Arenav3.png")
+    public Arena(MyGame myGame) : base("Arenav3.png")
     {
         EnemySpawnPoint.OnEnemySpawned += IncreaseNumberOfEnemiesAlive;
         Enemy.OnEnemyDestroyed += DecreaseNumberOfEnemiesAlive;
-
+        _myGame = myGame;
         CanSpawnMoreEnemies = true;
 
         NumberOfEnemies = 0;
@@ -83,8 +84,6 @@ class Arena : Sprite
         mouseCursor.height = 50;
         AddChild(mouseCursor);
 
-        //width = myGame.width;
-        //height = myGame.height;
         AddChild(_player = new Player(width / 2, height / 2));
 
         for(int i = 0; i < EnemySpawnChance.Length / 2; i++)
@@ -116,7 +115,7 @@ class Arena : Sprite
         _highScoreBoard.SetScaleXY(0.5f, 0.5f);
         _highScoreBoard.SetXY(_scoreBoard.width, -50);
 
-        AddChild(new HUD(game.width, game.height));
+        AddChild(new HUD(game.width, game.height, _myGame));
     }
 
     public void Update()

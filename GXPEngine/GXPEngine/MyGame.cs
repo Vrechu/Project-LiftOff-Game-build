@@ -7,7 +7,6 @@ public class MyGame : Game
     private Arena _arena;
     private Menu _menu;
     private Cutscene _cutscene;
-    private GameManager _gameManager;
     public static event Action OnPlayerDeath;
     public static event Action OnScreenStateSwitch;
     public static event Action OnGameRun;
@@ -35,7 +34,7 @@ public class MyGame : Game
 
     void Update()
     {
-        
+
     }
 
     static void Main()                          // Main() is the first method that's called when the program is run
@@ -75,7 +74,7 @@ public class MyGame : Game
             _arena.LateDestroy();
             _arena = null;
         }
-        _menu = new Menu(width / 2, height / 2, this);
+        _menu = new Menu(0, 0, this);
         LateAddChild(_menu);
     }
 
@@ -95,7 +94,7 @@ public class MyGame : Game
     public void loadScreens() // determines which screens to show
     {
         switch (_screenState)
-        {            
+        {
             case ScreenState.MENU:
                 {
                     StartMenu();

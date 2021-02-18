@@ -7,42 +7,37 @@ using GXPEngine;
 
 class Menu : Sprite
 {
-    private MyGame _mygame;
-    private Button _button;
+    private MyGame _myGame;
+    private Sprite _highScoreBoard;
+    private Sprite _nextButton;
 
-    public Menu(float px, float py, MyGame myGame) : base("checkers.png")
+    public Menu(float px, float py, MyGame myGame) : base("WallPaperFatt2.png")
     {
         x = px;
         y = py;
-        SetOrigin(width / 2, height / 2);
-        SetScaleXY(2, 2);
-        AddChild(_button = new Button(0, 0));
-        _mygame = myGame;
+        _myGame = myGame;
+        
+        AddChild(_highScoreBoard = new Sprite("HighScoreBoard.png"));
+        _highScoreBoard.SetOrigin(_highScoreBoard.width / 2, 0);
+        _highScoreBoard.SetXY(width/2, -100);
+
+        AddChild(_nextButton = new Sprite("Nextbutton.png"));
+        _nextButton.SetOrigin(_nextButton.width / 2, _nextButton.height / 2);
+        _nextButton.SetXY(width / 2, height / 2);
+        AddChild(new HUD(game.width, game.height, _myGame));
     }
 
     void Update()
     {
-        ClickButton();
         PressKey();
-    }
-        
-    //on button  click start the game
-    private void ClickButton()
-    {
-        if (Input.GetMouseButtonDown(0)
-            && _button.HitTestPoint(Input.mouseX, Input.mouseY)) // if mouse over button and clicked start level
-        {
-            _mygame._screenState = MyGame.ScreenState.CUTSCENE;
-            _mygame.loadScreens();
-        }
     }
 
     private void PressKey()
     {
         if (Input.GetKeyDown(Key.SPACE))
         {
-            _mygame._screenState = MyGame.ScreenState.CUTSCENE;
-            _mygame.loadScreens();
+            _myGame._screenState = MyGame.ScreenState.CUTSCENE;
+            _myGame.loadScreens();
         }        
     }
 }
