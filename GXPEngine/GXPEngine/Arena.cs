@@ -7,33 +7,32 @@ using GXPEngine;
 
 class Arena : Sprite
 {
-    private MyGame _myGame;
-    private Player _player;
+    private MyGame _myGame; //reference to myGame
+    private Player _player; //reference to the player
 
-    private Sprite _arenaWalls;
-    private AnimationSprite _leftCrowd;
-    private AnimationSprite _rightCrowd;
-    private AnimationSprite _duck;
-    private AnimationSprite _guards;
-    private byte animationLength = 10;
-    private bool canInvert = true;
-    private bool isInverted = false;
+    private Sprite _arenaWalls; //The arena walls sprite
+    private AnimationSprite _leftCrowd; //The left crowd sprite
+    private AnimationSprite _rightCrowd; //The right crowd sprite
+    private AnimationSprite _duck; //The duck sprite
+    private AnimationSprite _guards; //The guards sprite
+    private byte animationLength = 10; //The number of frames to show each animation frame
+    private bool canInvert = true; //Whether the duck sprite can be inverted
+    private bool isInverted = false; //Whether the duck sprite is inverted
 
-    private Sprite _scoreBoard;
-    private Sprite _highScoreBoard;
+    private Sprite _scoreBoard; //The scoreboard sprite
+    private Sprite _highScoreBoard; //The highscoreboard sprite
 
-    /// <summary>
-    /// The odds for each enemy to spawn
-    /// </summary>
+    // The odds for each enemy to spawn
     public static int[,] EnemySpawnChance { get; } = new int[,]
     {
         { 400, 100,  0 }, //The odds of the enemy spawning
         {   0,  10, 15 }  //The amount the odds should increase by
     };
 
+    //The default odds of enemies spawning
     private int[] defaultSpawnChance = new int[]
     {
-        400, 100, 0
+        300, 100, 0
     };
 
     private int lastDifficultyIncrease; //The last time the enemySpawnChance was updated
@@ -70,32 +69,68 @@ class Arena : Sprite
 
             return 0;
         }
-    }
-    public static int NumberOfEnemies;
+    } //Returns a random number corresponding to an enemy
+    public static int NumberOfEnemies; //The number of enemies alive in the arena
 
-    private EnemySpawnPoint[] enemySpawnPoints;
-    private Sprite mouseCursor;
+    private EnemySpawnPoint[] enemySpawnPoints; //The enemy spawn points
+    private Sprite mouseCursor; //The mouse cursor
 
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="myGame">Reference to MyGame</param>
     public Arena(MyGame myGame) : base("Arenav3.png")
     {
-        EnemySpawnPoint.OnEnemySpawned += IncreaseNumberOfEnemiesAlive;
-        Enemy.OnEnemyDestroyed += DecreaseNumberOfEnemiesAlive;
-        GameManager.OnPlayerDeath += StopSpawning;
+        SetEvents();
 
         _myGame = myGame;
         CanSpawnMoreEnemies = true;
 
         NumberOfEnemies = 0;
 
+        SetCursor();
+
+        AddChild(new Sprite("top_wall.png"));
+
+        AddChild(_player = new Player(width / 2, height / 2));
+
+        SetEnemySpawning();
+
+        SetArenaWalls();
+
+        SetAudience();
+
+        SetHud();
+    }
+
+    /// <summary>
+    /// Sets the events
+    /// </summary>
+    private void SetEvents()
+    {
+        EnemySpawnPoint.OnEnemySpawned += IncreaseNumberOfEnemiesAlive;
+        Enemy.OnEnemyDestroyed += DecreaseNumberOfEnemiesAlive;
+        GameManager.OnPlayerDeath += StopSpawning;
+    }
+
+    /// <summary>
+    /// Sets the mouse cursor
+    /// </summary>
+    private void SetCursor()
+    {
         mouseCursor = new Sprite("SummoningCircle.png");
         mouseCursor.SetOrigin(mouseCursor.width / 2, mouseCursor.height / 2);
         mouseCursor.width = 119;
         mouseCursor.height = 50;
         AddChild(mouseCursor);
-        AddChild(new Sprite("top_wall.png"));
+    }
 
-        AddChild(_player = new Player(width / 2, height / 2));
-
+    /// <summary>
+    /// Sets the properties related to spawning enemies
+    /// </summary>
+    private void SetEnemySpawning()
+    {
         for (int i = 0; i < EnemySpawnChance.Length / 2; i++)
         {
             EnemySpawnChance[0, i] = defaultSpawnChance[i];
@@ -108,13 +143,29 @@ class Arena : Sprite
             new EnemySpawnPoint(120, height - 100, _player),
             new EnemySpawnPoint(width - 120, height - 100, _player)
         };
+
+        lastDifficultyIncrease = Time.now;
+        lastEnemyIncrease = Time.now;
+    }
+
+    /// <summary>
+    /// Sets the arena walls
+    /// </summary>
+    private void SetArenaWalls()
+    {
         AddChild(_arenaWalls = new Sprite("ArenaWalls.png"));
 
         AddChild(new Wall(0, 0, width, 330));
         AddChild(new Wall(0, height, width, 30));
         AddChild(new Wall(-5, 0, 10, height));
         AddChild(new Wall(width - 5, 0, 10, height));
+    }
 
+    /// <summary>
+    /// Sets the audience
+    /// </summary>
+    private void SetAudience()
+    {
         AddChild(_leftCrowd = new AnimationSprite("left_rows.png", 3, 1, 3));
         AddChild(_rightCrowd = new AnimationSprite("right_rows.png", 3, 1, 3));
         AddChild(_duck = new AnimationSprite("duck.png", 4, 2, 8));
@@ -124,10 +175,13 @@ class Arena : Sprite
         _rightCrowd.SetCycle(0, 3, animationLength);
         _duck.SetCycle(0, 8, animationLength);
         _guards.SetCycle(0, 2, 20);
+    }
 
-        lastDifficultyIncrease = Time.now;
-        lastEnemyIncrease = Time.now;
-
+    /// <summary>
+    /// Sets the HUD
+    /// </summary>
+    private void SetHud()
+    {
         AddChild(_scoreBoard = new Sprite("ScoreBoard.png"));
         _scoreBoard.SetScaleXY(0.5f, 0.5f);
         _scoreBoard.SetXY(0, -50);
@@ -154,6 +208,9 @@ class Arena : Sprite
         AnimateArena();
     }
 
+    /// <summary>
+    /// Increases the number of enemies that are alive
+    /// </summary>
     private void IncreaseNumberOfEnemiesAlive()
     {
         NumberOfEnemies++;
@@ -162,7 +219,10 @@ class Arena : Sprite
             StopSpawning();
         }
     }
-
+    
+    /// <summary>
+    /// Decreases the number of enemies that are alive
+    /// </summary>
     private void DecreaseNumberOfEnemiesAlive()
     {
         NumberOfEnemies--;
@@ -173,6 +233,9 @@ class Arena : Sprite
         }
     }
 
+    /// <summary>
+    /// Updates the difficulty of the game
+    /// </summary>
     private void UpdateDifficulty()
     {
         Console.WriteLine("Updated Difficulty");
@@ -185,6 +248,9 @@ class Arena : Sprite
         lastDifficultyIncrease = Time.now;
     }
 
+    /// <summary>
+    /// Increases the number of enemies to spawn
+    /// </summary>
     private void IncreaseEnemyCount()
     {
         try
@@ -200,6 +266,9 @@ class Arena : Sprite
         }
     }
 
+    /// <summary>
+    /// Makes the cursor sprite follow the cursor
+    /// </summary>
     private void FollowCursor()
     {
         mouseCursor.SetXY(Input.mouseX, Input.mouseY);
@@ -212,6 +281,9 @@ class Arena : Sprite
         GameManager.OnPlayerDeath -= StopSpawning;
     }
 
+    /// <summary>
+    /// Animate the arena
+    /// </summary>
     private void AnimateArena()
     {
         _leftCrowd.Animate();
@@ -239,6 +311,9 @@ class Arena : Sprite
         }
     }
 
+    /// <summary>
+    /// Stop spawning enemies
+    /// </summary>
     private void StopSpawning()
     {
         CanSpawnMoreEnemies = false;

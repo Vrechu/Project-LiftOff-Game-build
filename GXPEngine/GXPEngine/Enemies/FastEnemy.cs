@@ -10,33 +10,38 @@ namespace GXPEngine.Enemies
     {
         public FastEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyDefaultHitbox.png", spawnX, spawnY, newTarget)
         {
-            moveSpeed = 2f;
-            distanceFromTarget = 400f;
-            shotCooldown = 2000;
-            scoreWorth = 2;
+            //========== OVERRIDE ==========
+            #region
+                moveSpeed = 2f;
+                distanceFromTarget = 400f;
+                shotCooldown = 2000;
+                scoreWorth = 2;
 
-            hitboxXOffset = 0;
-            hitboxYOffset = -30;
+                hitboxXOffset = 0;
+                hitboxYOffset = -30;
 
-            projectileLauncherXOffset = 32;
-            projectileLauncherYOffset = 15;
+                projectileLauncherXOffset = 32;
+                projectileLauncherYOffset = 15;
 
-            animationFrameTime = 10; //The amount of frames each animation frame should display for
+                animationFrameTime = 10;
 
-            shootAnimationTime = 20;
-            shootAnimationStartFrame = 0; //The starting frame of the shoot animation
-            shootAnimationFrameCount = 6; //The length of the shoot animation in frames
-            shootFrame = 4; //The frame at which a projectile is shot
+                shootAnimationTime = 20;
+                shootAnimationStartFrame = 0;
+                shootAnimationFrameCount = 6;
+                shootFrame = 4;
 
-            walkAnimationStartFrame = 7;
-            walkAnimationFrameCount = 5;
+                walkAnimationStartFrame = 7;
+                walkAnimationFrameCount = 5;
 
-            deathAnimationStartFrame = 12;
-            deathAnimationFrameCount = 6;
-            deathFrame = 17;
+                deathAnimationStartFrame = 12;
+                deathAnimationFrameCount = 6;
+                deathFrame = 17;
 
-            enemyType = EnemyType.FAST;
+                enemyType = EnemyType.FAST;
+            #endregion
 
+
+            //Set the extra properties of the enemy
             SetHitbox(hitboxXOffset, hitboxYOffset);
             SetDropShadow("DropShadow.png", 119, 25, 10, 55);
             SetAnimation("EnemyFast.png", 5, 4);

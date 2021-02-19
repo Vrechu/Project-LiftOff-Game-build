@@ -19,30 +19,30 @@ namespace GXPEngine
         protected int shotCooldown = 2000; //The cooldown (after shooting) before the enemy can shoot again
         protected int scoreWorth = 1; //The amount of points the enemy is worth
 
-        protected int hitboxXOffset = 0;
-        protected int hitboxYOffset = 0;
+        protected int hitboxXOffset = 0; //The X offset of the hitbox
+        protected int hitboxYOffset = 0; //The Y offset of the hitbox
 
-        protected int projectileLauncherXOffset = 0;
-        protected int projectileLauncherYOffset = 0;
+        protected int projectileLauncherXOffset = 0; //The X offset of the projectile launcher
+        protected int projectileLauncherYOffset = 0; //The Y offset of the projectile launcher
 
         protected byte animationFrameTime = 10; //The amount of frames each animation frame should display for
 
-        protected int idleAnimationStartFrame = 0;
-        protected int idleAnimationFrameCount = 1;
+        protected int idleAnimationStartFrame = 0; //The starting frame of the idle animation
+        protected int idleAnimationFrameCount = 1; //The number of frames the idle animation plays for
 
         protected byte shootAnimationTime = 10; //The amount of frames each frame is shown for during shooting
         protected int shootAnimationStartFrame = 0; //The starting frame of the shoot animation
         protected int shootAnimationFrameCount = 6; //The length of the shoot animation in frames
         protected int shootFrame = 4; //The frame at which a projectile is shot
 
-        protected int walkAnimationStartFrame = 7;
-        protected int walkAnimationFrameCount = 5;
+        protected int walkAnimationStartFrame = 7; //The starting frame of the walking animation
+        protected int walkAnimationFrameCount = 5; //The number of frames the walking animation plays for
 
-        protected int deathAnimationStartFrame = 12;
-        protected int deathAnimationFrameCount = 6;
-        protected int deathFrame = 17;
+        protected int deathAnimationStartFrame = 12; //The starting frame of the death animation
+        protected int deathAnimationFrameCount = 6; //The number of frames the death animation plays for
+        protected int deathFrame = 17; //The frame the enemy dies at
 
-        protected EnemyType enemyType = EnemyType.SLOW;
+        protected EnemyType enemyType = EnemyType.SLOW; //The type of the enemy
         #endregion
 
         //============= EVENTS =============
@@ -52,18 +52,18 @@ namespace GXPEngine
         #endregion
 
         private int projectileShotTime; //The last time the enemy shot a projectile
-        private bool isFiring = false;
-        private bool isDying = false;
-        private bool canMove = true;
+        private bool isFiring = false; //Whether the enemy is firing
+        private bool isDying = false; //Whether the enemy is dying
+        private bool canMove = true; //Whether the enemy can move
 
-        private EnemyState enemyState = EnemyState.IDLE;
+        private EnemyState enemyState = EnemyState.IDLE; //The state of the enemy
 
         private ProjectileLauncher projectileManager; //The projectile that's charging
-        private EnemyAnimation enemyAnimation;
-        private Sprite dropShadow;
+        private EnemyAnimation enemyAnimation; //The animation of the enemy
+        private Sprite dropShadow; //The shadow of the enemy
 
         private GameObject target; //The target the enemy is following
-        private LineOfSight lineOfSight;
+        private LineOfSight lineOfSight; //The line of sight of the enemy
 
         //The position in Vec2
         private Vec2 Position
@@ -84,9 +84,9 @@ namespace GXPEngine
         /// Constructor
         /// </summary>
         /// <param name="hitboxSprite">The sprite of the hitbox</param>
-        /// <param name="spawnX">The X coordinate to spawn at</param>
-        /// <param name="spawnY">The Y coordinate to spawn at</param>
-        /// <param name="newTarget">The target of the enemy</param>
+        /// <param name="spawnX">The X coordinates to spawn at</param>
+        /// <param name="spawnY">The Y coordinates to spawn at</param>
+        /// <param name="newTarget">The target the enemy will follow</param>
         public Enemy(string hitboxSprite, float spawnX, float spawnY, GameObject newTarget) : base(hitboxSprite)
         {
             Initialize(spawnX, spawnY, newTarget);
@@ -111,11 +111,22 @@ namespace GXPEngine
             name = "Enemy";
         }
 
+        /// <summary>
+        /// Sets the hitbox of the enemy
+        /// </summary>
+        /// <param name="hitboxXOffset">The X offset of the hitbox</param>
+        /// <param name="hitboxYOffset">The Y offset of the hitbox</param>
         protected void SetHitbox(int hitboxXOffset, int hitboxYOffset)
         {
             SetOrigin(width / 2 + hitboxXOffset, height / 2 + hitboxYOffset); //Center the origin of the enemy
         }
 
+        /// <summary>
+        /// Sets the projectile launcher of the enemy
+        /// </summary>
+        /// <param name="projectileXOffset">The X offset of the launcher</param>
+        /// <param name="projectileYOffset">The Y offset of the launcher</param>
+        /// <param name="projectile">The projectile the launcher will shoot</param>
         protected void SetProjectileLauncher(int projectileXOffset, int projectileYOffset, Projectile projectile)
         {
             projectileManager = new ProjectileLauncher(projectile, this, target);
@@ -123,12 +134,26 @@ namespace GXPEngine
             enemyAnimation.AddChild(projectileManager);
         }
 
+        /// <summary>
+        /// Sets the animation of the enemy
+        /// </summary>
+        /// <param name="sprite">The spritesheet for the animation</param>
+        /// <param name="cols">The number of columns the spritesheet has</param>
+        /// <param name="rows">The number of rows the spritesheet has</param>
         protected void SetAnimation(string sprite, int cols, int rows)
         {
             enemyAnimation = new EnemyAnimation(sprite, cols, rows);
             AddChild(enemyAnimation);
         }
 
+        /// <summary>
+        /// Sets the shadow for the enemy
+        /// </summary>
+        /// <param name="shadowSprite">The sprite of the shadow</param>
+        /// <param name="spriteWidth">The width of the shadow</param>
+        /// <param name="spriteHeight">The height of the shadow</param>
+        /// <param name="xOffset">The X offset of the shadow</param>
+        /// <param name="yOffset">The Y offset of the shadow</param>
         protected void SetDropShadow(string shadowSprite, int spriteWidth, int spriteHeight, int xOffset, int yOffset)
         {
             dropShadow = new Sprite(shadowSprite);
@@ -193,17 +218,26 @@ namespace GXPEngine
             SetAnimationCycle(enemyState);
         }
 
+        /// <summary>
+        /// Starts firing a projectile
+        /// </summary>
         private void StartFiring()
         {
             enemyState = EnemyState.SHOOTING;
             isFiring = true;
         }
 
+        /// <summary>
+        /// Stops firing a projectile
+        /// </summary>
         private void StopFiring()
         {
             isFiring = false;
         }
 
+        /// <summary>
+        /// Run while the enemy is charging a shot
+        /// </summary>
         private void ChargeShot()
         {
             if (enemyAnimation.currentFrame == shootFrame && Time.now > projectileShotTime + shotCooldown)
@@ -256,6 +290,10 @@ namespace GXPEngine
             //Position += moveDirection * moveSpeed; 
         }
 
+        /// <summary>
+        /// Faces the enemy left or right
+        /// </summary>
+        /// <param name="faceLeft">Whether the enemy should face left (or right)</param>
         private void FaceLeft(bool faceLeft)
         {
             switch (faceLeft)
@@ -271,12 +309,19 @@ namespace GXPEngine
             }
         }
 
+        /// <summary>
+        /// Stop the enemy from moving
+        /// </summary>
         private void StopMoving()
         {
             canMove = false;
             enemyState = EnemyState.IDLE;
         }
 
+        /// <summary>
+        /// Set the animation cycle for the enemy animation
+        /// </summary>
+        /// <param name="newEnemyState"></param>
         private void SetAnimationCycle(EnemyState newEnemyState)
         {
             switch (newEnemyState)
@@ -296,6 +341,9 @@ namespace GXPEngine
             }
         }
 
+        /// <summary>
+        /// Kills the enemy
+        /// </summary>
         private void Die()
         {
             isDying = true;
@@ -303,6 +351,9 @@ namespace GXPEngine
             OnHit?.Invoke(enemyType);
         }
 
+        /// <summary>
+        /// While the enemy is dying
+        /// </summary>
         private void Dying()
         {
             enemyState = EnemyState.DYING;

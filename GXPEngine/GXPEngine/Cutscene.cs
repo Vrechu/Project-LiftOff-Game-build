@@ -7,18 +7,22 @@ namespace GXPEngine
 {
     class Cutscene : Sprite
     {
-        private MyGame _mygame;
-        private Sprite _nextButton;
+        private MyGame _mygame; //Reference to MyGame
+        private Sprite _nextButton; //The "Press space to continue" button
 
         public Sprite[] images = new Sprite[]
         {
             new Sprite("Comic 1.png"),
             new Sprite("Comic 2.png"),
             new Sprite("Comic 3.png")
-        };
+        }; //The list of sprites
 
-        private int currentImage = 0;
+        private int currentImage = 0; //The current page of the cutscene
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="myGame">Reference to MyGame</param>
         public Cutscene(MyGame myGame) : base("checkers.png")
         {
             _mygame = myGame;
@@ -37,12 +41,19 @@ namespace GXPEngine
             }
         }
 
+        /// <summary>
+        /// Sets the image to show
+        /// </summary>
+        /// <param name="i">The image/page to display</param>
         private void SetImage(int i)
         {
             AddChild(images[i]);
             SetChildIndex(_nextButton, 9999);
         }
 
+        /// <summary>
+        /// Shows the next image/page
+        /// </summary>
         private void NextImage()
         {
             currentImage++;

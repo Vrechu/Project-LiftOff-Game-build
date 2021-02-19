@@ -9,20 +9,24 @@ namespace GXPEngine.Projectiles
     {
         public HomingProjectile() : base("ProjectileHomingHitbox.png")
         {
-            moveSpeed = 5f;
+            //========== OVERRIDE ==========
+            #region
+                moveSpeed = 5f;
 
-            shootAnimationStartFrame = 0;
-            shootAnimationFrameCount = 3;
+                shootAnimationStartFrame = 0;
+                shootAnimationFrameCount = 3;
 
-            explosionAnimationFrame = 0;
+                explosionAnimationFrame = 0;
 
-            projectileType = ProjectileType.HOMING;
+                projectileType = ProjectileType.HOMING;
 
-            hitboxXOffset = 1;
-            hitboxYOffset = 1;
+                hitboxXOffset = 1;
+                hitboxYOffset = 1;
 
-            shouldHome = true;
+                shouldHome = true;
+            #endregion
 
+            //Set the extra properties of the projectile
             SetHitbox();
             SetShadow("DropShadow.png", 64, 15, 0x000000);
             SetAnimation("ProjectileHoming.png", 2, 2, 3);

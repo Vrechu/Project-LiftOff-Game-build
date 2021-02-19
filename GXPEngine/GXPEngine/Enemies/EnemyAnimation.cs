@@ -7,6 +7,12 @@ namespace GXPEngine.Enemies
 {
     class EnemyAnimation : AnimationSprite
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="sprite">The spritesheet of the animation</param>
+        /// <param name="cols">The number of columns the spritesheet has</param>
+        /// <param name="rows">The number of rows the spritesheet has</param>
         public EnemyAnimation(string sprite, int cols, int rows) : base(sprite, cols, rows, addCollider:false)
         {
             Initialize();

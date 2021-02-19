@@ -11,39 +11,40 @@ namespace GXPEngine
     {
         //========== OVERRIDEABLE ==========
         #region
-        protected float moveSpeed = 5f; //The speed at which the projectile moves
+            protected float moveSpeed = 5f; //The speed at which the projectile moves
 
-        protected int shootAnimationStartFrame = 0;
-        protected int shootAnimationFrameCount = 2;
+            protected int shootAnimationStartFrame = 0; //The starting frame of the shooting animation
+            protected int shootAnimationFrameCount = 2; //The number of frames the shooting animation has
 
-        protected int hitboxXOffset = 0;
-        protected int hitboxYOffset = 0;
+            protected int hitboxXOffset = 0; //The X offset of the hitbox
+            protected int hitboxYOffset = 0; //The Y offset of the hitbox
 
-        protected int explosionAnimationFrame = 2;
-        private int explosionDuration = 200;
-        protected bool shouldHome = false;
+            protected int explosionAnimationFrame = 2; //The frame of the explosion
+            private int explosionDuration = 200; //The time the explosion will show for (milliseconds)
+            protected bool shouldHome = false; //Whether the projectile should be homing
         #endregion
 
         //============= EVENTS =============
         #region
-        public static event Action<ProjectileType> OnShot; //When the projectile is shot
-        public static event Action<ProjectileType> OnExplode; //When the projectile explodes
+            public static event Action<ProjectileType> OnShot; //When the projectile is shot
+            public static event Action<ProjectileType> OnExplode; //When the projectile explodes
         #endregion
 
-        private bool isExploding = false;
-        private int explosionStartTime;
+        private bool isExploding = false; //Whether the projectile is exploding
+        private int explosionStartTime; //The time at which the projectile started exploding
 
-        public ProjectileType projectileType = ProjectileType.SLOW;
+        public ProjectileType projectileType = ProjectileType.SLOW; //The type of projectile
 
         public bool HasLeftSource { get; private set; } = false; //Whether the projectile has left its source
         protected GameObject source; //The source object that the projectile came from
-        protected GameObject target;
-        public bool IsLethal { get; private set; } = false;
-        public bool InWall { get; private set; } = false;
+        protected GameObject target; //The target the projectile aims for (if homing)
+        public bool IsLethal { get; private set; } = false; //Whether the projectile is lethal to its source
+        public bool InWall { get; private set; } = false; //Whether the projectile is inside a wall
 
-        private AnimationSprite projectileAnimation;
-        private Sprite dropShadow;
+        private AnimationSprite projectileAnimation; //The animation of the projectile
+        private Sprite dropShadow; //The shadow of the projectile
 
+        //The direction in which the projectile will move
         public Vec2 MoveDirection { get; private set; }
 
         //The position in Vector2
@@ -62,12 +63,9 @@ namespace GXPEngine
         }
 
         /// <summary>
-        /// Constrtuctor
+        /// Constructor
         /// </summary>
-        /// <param name="spawnX">The X coordinate to spawn the projectile at</param>
-        /// <param name="spawnY">The Y coordinate to spawn the projectile at</param>
-        /// <param name="newSource">The source the projectile was shot from</param>
-        /// <param name="direction">The direction the projectile is being shot at</param>
+        /// <param name="hitboxSprite">The sprite for the hitbox</param>
         public Projectile(string hitboxSprite) : base(hitboxSprite)
         {
             Initialize();
@@ -83,11 +81,21 @@ namespace GXPEngine
             name = "Projectile";
         }
 
+        /// <summary>
+        /// Sets the hitbox of the projectile
+        /// </summary>
         protected void SetHitbox()
         {
             SetOrigin(width / 2, height / 2); //Set the origin
         }
 
+        /// <summary>
+        /// Sets the animation
+        /// </summary>
+        /// <param name="animationSprite">The animation spritesheet</param>
+        /// <param name="spriteCols">The number of colums the spritesheet has</param>
+        /// <param name="spriteRows">The number of rows the spritesheet has</param>
+        /// <param name="spriteFrames">The number of frames the spritesheet has</param>
         protected void SetAnimation(string animationSprite, int spriteCols, int spriteRows, int spriteFrames)
         {
             projectileAnimation = new AnimationSprite(animationSprite, spriteCols, spriteRows, frames: spriteFrames);
@@ -98,6 +106,13 @@ namespace GXPEngine
             AddChild(projectileAnimation);
         }
 
+        /// <summary>
+        /// Sets the shadow for the proejctile
+        /// </summary>
+        /// <param name="shadowSprite">The sprite of the shadow</param>
+        /// <param name="spritewidth">The width of the shadow</param>
+        /// <param name="spriteHeight">The height of the shadow</param>
+        /// <param name="color">The color hue of the shadow</param>
         protected void SetShadow(string shadowSprite, int spritewidth, int spriteHeight, uint color)
         {
             dropShadow = new Sprite(shadowSprite);
@@ -139,6 +154,9 @@ namespace GXPEngine
             projectileAnimation.Animate();
         }
 
+        /// <summary>
+        /// Called when the projectile is reflected
+        /// </summary>
         public void Reflect()
         {
             shouldHome = false;
@@ -146,9 +164,9 @@ namespace GXPEngine
         }
 
         /// <summary>
-        /// Rotates the projectile towards a certain position
+        /// Rotate towards the designated direction
         /// </summary>
-        /// <param name="targetRotation">The position to rotate towards</param>
+        /// <param name="targetRotation">The direction the projectile should rotate towards</param>
         public void RotateTowardsDirection(Vec2 targetRotation)
         {
             if (!isExploding)
@@ -165,7 +183,7 @@ namespace GXPEngine
         }
 
         /// <summary>
-        /// Rotates the projectile towards a scertain object
+        /// Rotate towards a designated object
         /// </summary>
         /// <param name="target">The object to rotate towards</param>
         public void RotateTowardsObject(GameObject target)
@@ -179,7 +197,7 @@ namespace GXPEngine
         }
 
         /// <summary>
-        /// Check if the projectile has left its source
+        /// Check if the projectile has left the object it came from
         /// </summary>
         private void CheckIfLeftSource()
         {
@@ -188,6 +206,9 @@ namespace GXPEngine
                 HasLeftSource = true;
         }
 
+        /// <summary>
+        /// Check if the projectile became unstuck from the wall
+        /// </summary>
         private void CheckIfLeftWall()
         {
             foreach(Wall wall in game.FindObjectsOfType<Wall>())
@@ -201,6 +222,11 @@ namespace GXPEngine
             InWall = false;
         }
 
+        /// <summary>
+        /// Spawns the projectile in the game
+        /// </summary>
+        /// <param name="spawnX">The X coordinates to spawn at</param>
+        /// <param name="spawnY">The Y coordinates to spawn at</param>
         public void Spawn(float spawnX, float spawnY)
         {
             foreach(Wall wall in game.FindObjectsOfType<Wall>())
@@ -218,12 +244,16 @@ namespace GXPEngine
         }
 
         /// <summary>
-        /// Duplicates the current projectile
+        /// Duplicate the projectile
         /// </summary>
-        /// <param name="newSource">The source of the projectile</param>
+        /// <param name="newSource">The object the projectile came from</param>
+        /// <param name="newTarget">The target the projectile will focus on if homing</param>
         /// <returns></returns>
         public abstract Projectile Duplicate(GameObject newSource, GameObject newTarget);
 
+        /// <summary>
+        /// Runs while the projectile is exploding
+        /// </summary>
         private void WhileExploding()
         {
             if (Time.now >= explosionStartTime + explosionDuration)
@@ -232,11 +262,17 @@ namespace GXPEngine
             }
         }
 
+        /// <summary>
+        /// Makes the projectile lethal to its source object
+        /// </summary>
         public void BecomeLethal()
         {
             IsLethal = true;
         }
 
+        /// <summary>
+        /// Starts exploding the projectile
+        /// </summary>
         public void StartExploding()
         {
             if (!isExploding)
@@ -248,6 +284,9 @@ namespace GXPEngine
             }
         }
 
+        /// <summary>
+        /// Removes the projectile
+        /// </summary>
         private void Dissapear()
         {
             LateDestroy();

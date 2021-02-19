@@ -9,18 +9,22 @@ namespace GXPEngine.Projectiles
     {
         public FastProjectile() : base("ProjectileFastHitbox.png")
         {
-            moveSpeed = 10f;
+            //========== OVERRIDE ==========
+            #region
+                moveSpeed = 10f;
 
-            shootAnimationStartFrame = 0;
-            shootAnimationFrameCount = 2;
+                shootAnimationStartFrame = 0;
+                shootAnimationFrameCount = 2;
 
-            explosionAnimationFrame = 2;
+                explosionAnimationFrame = 2;
 
-            projectileType = ProjectileType.FAST;
+                projectileType = ProjectileType.FAST;
 
-            hitboxXOffset = 0;
-            hitboxYOffset = 22;
+                hitboxXOffset = 0;
+                hitboxYOffset = 22;
+            #endregion
 
+            //Set the extra properties of the projectile
             SetHitbox();
             SetShadow("DropShadow.png", 64, 12, 0xdcfff3);
             SetAnimation("ProjectileFast.png", 3, 1, 3);

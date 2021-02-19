@@ -10,13 +10,14 @@ namespace GXPEngine.Projectiles
     {
         private Projectile projectileToLaunch; //The projectile to shoot
         private GameObject source; //The source to shoot from
-        private GameObject target;
+        private GameObject target; //The target the projectile will focus on
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="newProjectileToLaunch">The projectile to launch</param>
-        /// <param name="newSource">The source to shoot from</param>
+        /// <param name="newProjectileToLaunch">The projectile the launcher should launch copies of</param>
+        /// <param name="newSource">The source object of the launcher</param>
+        /// <param name="newTarget">The target of the projectiles to spawn</param>
         public ProjectileLauncher(Projectile newProjectileToLaunch, GameObject newSource, GameObject newTarget) : base("square.png", false)
         {
             Initialize(newProjectileToLaunch, newSource, newTarget);

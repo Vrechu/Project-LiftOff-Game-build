@@ -10,33 +10,37 @@ namespace GXPEngine.Enemies
     {
         public HomingEnemy(float spawnX, float spawnY, GameObject newTarget) : base("EnemyHomingHitbox.png", spawnX, spawnY, newTarget)
         {
-            moveSpeed = 2f;
-            distanceFromTarget = 400f;
-            shotCooldown = 2000;
-            scoreWorth = 2;
+            //========== OVERRIDE ==========
+            #region
+                moveSpeed = 2f;
+                distanceFromTarget = 400f;
+                shotCooldown = 2000;
+                scoreWorth = 2;
 
-            hitboxXOffset = 3;
-            hitboxYOffset = -20;
+                hitboxXOffset = 3;
+                hitboxYOffset = -20;
 
-            projectileLauncherXOffset = 32;
-            projectileLauncherYOffset = 15;
+                projectileLauncherXOffset = 32;
+                projectileLauncherYOffset = 15;
 
-            animationFrameTime = 10; //The amount of frames each animation frame should display for
+                animationFrameTime = 10; //The amount of frames each animation frame should display for
 
-            shootAnimationTime = 20;
-            shootAnimationStartFrame = 0; //The starting frame of the shoot animation
-            shootAnimationFrameCount = 4; //The length of the shoot animation in frames
-            shootFrame = 2; //The frame at which a projectile is shot
+                shootAnimationTime = 20;
+                shootAnimationStartFrame = 0; //The starting frame of the shoot animation
+                shootAnimationFrameCount = 4; //The length of the shoot animation in frames
+                shootFrame = 2; //The frame at which a projectile is shot
 
-            walkAnimationStartFrame = 4;
-            walkAnimationFrameCount = 4;
+                walkAnimationStartFrame = 4;
+                walkAnimationFrameCount = 4;
 
-            deathAnimationStartFrame = 9;
-            deathAnimationFrameCount = 7;
-            deathFrame = 15;
+                deathAnimationStartFrame = 9;
+                deathAnimationFrameCount = 7;
+                deathFrame = 15;
 
-            enemyType = EnemyType.HOMING;
+                enemyType = EnemyType.HOMING;
+            #endregion
 
+            //Set the extra properties of the enemy
             SetHitbox(hitboxXOffset, hitboxYOffset);
             SetDropShadow("DropShadow.png", 100, 25, 10, 55);
             SetAnimation("EnemyHoming.png", 4, 4);

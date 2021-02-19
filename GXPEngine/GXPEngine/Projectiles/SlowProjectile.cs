@@ -9,19 +9,22 @@ namespace GXPEngine.Projectiles
     {
         public SlowProjectile() : base("ProjectileSlowHitbox.png")
         {
-            //Override the variables
-            moveSpeed = 5f;
+            //========== OVERRIDE ==========
+            #region
+                moveSpeed = 5f;
 
-            shootAnimationStartFrame = 0;
-            shootAnimationFrameCount = 2;
+                shootAnimationStartFrame = 0;
+                shootAnimationFrameCount = 2;
 
-            projectileType = ProjectileType.SLOW;
+                projectileType = ProjectileType.SLOW;
 
-            explosionAnimationFrame = 2;
+                explosionAnimationFrame = 2;
 
-            hitboxXOffset = 0;
-            hitboxYOffset = 8;
+                hitboxXOffset = 0;
+                hitboxYOffset = 8;
+            #endregion
 
+            //Set the extra properties of the projectile
             SetHitbox();
             SetShadow("DropShadow.png", 64, 18, 0xff0000);
             SetAnimation("ProjectileSlow.png", 3, 1, 3);
