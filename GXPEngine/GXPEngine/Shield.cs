@@ -17,7 +17,7 @@ class Shield : Sprite
     {        
         SetOrigin(-96 , height/2);
         _player = player;
-        alpha = 0;
+        alpha = 0;  //hitbox sprite is invisible
     }
 
     void Update()
@@ -44,10 +44,10 @@ class Shield : Sprite
     {
         if (other is Projectile)
         {
-            Projectile projectile = other as Projectile;
-            projectile.RotateTowardsDirection(shieldDirectionVector);
-            projectile.Reflect();
-            OnProjectileReflect?.Invoke();
+            Projectile projectile = other as Projectile;                // cast other as projectile
+            projectile.RotateTowardsDirection(shieldDirectionVector);       // rotate projectile towards where shield is aiming
+            projectile.Reflect();                           // reflect the projectile
+            OnProjectileReflect?.Invoke();                  //invoke projectile reflection event for sound
         }
     }
 

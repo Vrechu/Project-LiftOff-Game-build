@@ -16,13 +16,14 @@ class Wall : Sprite
         alpha = 0;
     }
 
+    // collision detection with projectiles
     public void OnCollision(GameObject other)
     {
-        if(!(other is AnimationSprite) && other.parent is Projectile projectile)
+        if(!(other is AnimationSprite) && other.parent is Projectile projectile) //if other is no animationsprite and child of a projectile
         {
-            if (!projectile.InWall || projectile.MoveDirection.y < 0)
+            if (!projectile.InWall || projectile.MoveDirection.y < 0) // if projectile is not in wall or the movedirection is up.
             {
-                projectile.StartExploding();
+                projectile.StartExploding(); // explode
             }
         }
     }

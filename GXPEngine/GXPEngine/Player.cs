@@ -20,11 +20,11 @@ class Player : Sprite
     private PlayerAnimations _playerAnimations;     // animation sprite of the player
     private byte _playerAnimationTime = 10;         //time each animation frame is shown
     int _hurtAnimationLoops = 0;            
-    int _maxHurtAnimationLoops = 1;             //amount of time the hurt animation loops
+    int _maxHurtAnimationLoops = 1;             //amount of times the hurt animation loops
     private float _shieldSpriteOffset = 8;          //the offset of the shield sprites
 
     private int deathTime;
-    private int deathLength = 1500;
+    private int deathLength = 1500;                //amount of frames the deathanimation stays on screen after compltetion
 
     public static event Action OnDeathAnimationEnd;         //death animation end event
     private Sprite dropShadow;              //shadow sprite
@@ -106,8 +106,8 @@ class Player : Sprite
     // sets calculates player velocity
     void PlayerMovement()
     {
-        _playerDirection = up + down + left + right;
-        _playerDirection.Normalize();
+        _playerDirection = up + down + left + right;            //calculate walkdirection depending on input keys
+        _playerDirection.Normalize();                       // normalize walkdirection
 
         if (_playerState != PlayerState.DYING && _playerState != PlayerState.DEAD)
         {
@@ -117,7 +117,7 @@ class Player : Sprite
                 {
                     SetPlayerState(PlayerState.IDLE);
                 }
-                _playerVelocity = _playerVelocity / _inertiaCoefficient;
+                _playerVelocity = _playerVelocity / _inertiaCoefficient;        //stops player gradually after stopping
             }
             else
             {
@@ -125,7 +125,7 @@ class Player : Sprite
                 {
                     SetPlayerState(PlayerState.WALKING);
                 }
-                _playerVelocity = _playerDirection * playerSpeed;           
+                _playerVelocity = _playerDirection * playerSpeed;               // calculates velocity
             }
         }
     }
@@ -135,7 +135,7 @@ class Player : Sprite
     {
         if(_playerState != PlayerState.DYING && _playerState != PlayerState.DEAD)
         {
-            MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, dropShadow, game.FindObjectsOfType<Wall>());
+            MoveUntilCollision(_playerVelocity.x, _playerVelocity.y, dropShadow, game.FindObjectsOfType<Wall>());   // moves player until it hits a wall
 
             _playerPosition.x = x;
             _playerPosition.y = y;
@@ -259,6 +259,7 @@ class Player : Sprite
         }
     }
 
+    // keeps the player in the death state for a time after the animation is finished
     private void RemainDead()
     {
         if(_playerState == PlayerState.DEAD)

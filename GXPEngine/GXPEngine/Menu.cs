@@ -17,14 +17,14 @@ class Menu : Sprite
         y = py;
         _myGame = myGame;
         
-        AddChild(_highScoreBoard = new Sprite("HighScoreBoard.png"));
+        AddChild(_highScoreBoard = new Sprite("HighScoreBoard.png"));       // highscore board sprite 
         _highScoreBoard.SetOrigin(_highScoreBoard.width / 2, 0);
         _highScoreBoard.SetXY(width/2 - 600, -100);
 
-        AddChild(_nextButton = new Sprite("Nextbutton.png"));
+        AddChild(_nextButton = new Sprite("Nextbutton.png"));               // press space sprite
         _nextButton.SetOrigin(_nextButton.width / 2, _nextButton.height / 2);
         _nextButton.SetXY(width / 2 + 50, height / 2);
-        AddChild(new HUD(game.width, game.height, _myGame));
+        AddChild(new HUD(game.width, game.height, _myGame));                // Add HUD
     }
 
     void Update()
@@ -32,6 +32,7 @@ class Menu : Sprite
         PressKey();
     }
 
+    // when pressing space go to next screen
     private void PressKey()
     {
         if (Input.GetKeyDown(Key.SPACE))

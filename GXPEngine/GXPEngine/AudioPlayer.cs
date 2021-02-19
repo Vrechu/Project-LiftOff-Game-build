@@ -10,9 +10,9 @@ class AudioPlayer : GameObject
 {
     MyGame _myGame;
     SoundChannel _musicChannel;
-    Sound _gameMusic;
-    Sound _menuMusic;
-    Sound _comicMusic;
+    Sound _gameMusic;           //music to play ingame
+    Sound _menuMusic;           //music to play in menu
+    Sound _comicMusic;          // music to play in the comic
 
     public AudioPlayer(MyGame myGame)
     {
@@ -23,6 +23,7 @@ class AudioPlayer : GameObject
         _comicMusic = new Sound("comic_music.mp3", true, true);
     }
 
+    // subscribe to sound events
     private void EventSubscriptions()
     {
         MyGame.OnGameRun += PlayMusic;
@@ -34,15 +35,16 @@ class AudioPlayer : GameObject
         Enemy.OnHit += PlayEnemyHitSound;
     }
 
+    // unsubscribe from sound events
     void OnDestroy()
     {
-        MyGame.OnGameRun += PlayMusic;
+        MyGame.OnGameRun -= PlayMusic;
         MyGame.OnScreenStateSwitch -= PlayMusic;
         Player.OnPLayerHit -= PlayHurtSound;
         GameManager.OnPlayerDeath -= PlayDeathSound;
         Projectile.OnShot -= PlayProjectileShotSound;
         Shield.OnProjectileReflect -= PlayReflectSound;
-        Enemy.OnHit += PlayEnemyHitSound;
+        Enemy.OnHit -= PlayEnemyHitSound;
     }
 
     // plays the sound effect for when the player is hurt
@@ -54,7 +56,7 @@ class AudioPlayer : GameObject
     // plays the sound effect for dying
     private void PlayDeathSound()
     {
-        _musicChannel.Stop();
+        _musicChannel.Stop();                   //stops the music channel
         new Sound("PlayerDead.wav").Play();
     }
 
