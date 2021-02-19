@@ -8,13 +8,15 @@ namespace GXPEngine
 {
     class HUD : Canvas
     {
-        Font ingameFont;
-        Font menuFont;
+        MyGame _myGame;
+
+        Font ingameFont; // font the HUD ingame uses
+        Font menuFont; // font the menu HUD uses
+
         StringFormat leftAlignment;
         StringFormat rightAlignment;
 
-        private AnimationSprite _healthIndicator;
-        MyGame _myGame;
+        private AnimationSprite _healthIndicator; // health heart sprite
 
         public HUD(int width, int height, MyGame myGame) : base(width, height, false)
         {
@@ -40,15 +42,15 @@ namespace GXPEngine
             {
                 case MyGame.ScreenState.INGAME:
                     {
-                        graphics.DrawString("" + GameManager.Singleton._highScore, ingameFont, Brushes.White, 360, 70, leftAlignment);
-                        graphics.DrawString("" + GameManager.Singleton._playerScore, ingameFont, Brushes.White, 100, 70, leftAlignment);
-                        UpdateHealthIndicator();
+                        graphics.DrawString("" + GameManager.Singleton._highScore, ingameFont, Brushes.White, 360, 70, leftAlignment);          // draw highscore
+                        graphics.DrawString("" + GameManager.Singleton._playerScore, ingameFont, Brushes.White, 100, 70, leftAlignment);        // draw score
+                        UpdateHealthIndicator();                                                                                                // show health
                         break;
                     }
                 case MyGame.ScreenState.MENU:
                     {
-                        graphics.DrawString("" + GameManager.Singleton._highScore, menuFont, Brushes.White, width/2-642, 130, leftAlignment);
-                        _healthIndicator.alpha = 0;
+                        graphics.DrawString("" + GameManager.Singleton._highScore, menuFont, Brushes.White, width/2-642, 130, leftAlignment);   // draw highscore
+                        _healthIndicator.alpha = 0;                                                                                             // healthindicator does not show in menu
                         break;
                     }
             }

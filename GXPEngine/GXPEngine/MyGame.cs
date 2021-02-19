@@ -7,6 +7,7 @@ public class MyGame : Game
     private Arena _arena;
     private Menu _menu;
     private Cutscene _cutscene;
+
     public static event Action OnPlayerDeath;
     public static event Action OnScreenStateSwitch;
     public static event Action OnGameRun;
@@ -78,6 +79,7 @@ public class MyGame : Game
         LateAddChild(_menu);
     }
 
+    //destroys the menu then starts the cutscene
     private void StartCutscene()
     {
         if (_menu != null)

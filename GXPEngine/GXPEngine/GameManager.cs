@@ -21,11 +21,11 @@ class GameManager : GameObject
         }
     }
 
-    private int _maxPlayerHealth = 3;
-    public int _playerHealth;
+    private int _maxPlayerHealth = 3;           //health the player starts with
+    public int _playerHealth;               //changeable player health
 
-    public int _playerScore;
-    public int _highScore = 0;
+    public int _playerScore;            //the score the player gets from kills
+    public int _highScore = 0;          // the highscore
 
     private GameManager()
     {
@@ -68,6 +68,7 @@ class GameManager : GameObject
         }
     }
 
+    // checks if current score is higher than teh highscore. if current score is higher than the hghscore, highscore becomes the same as currentscore.
     private void CheckHighScore()
     {
         if (_highScore < _playerScore)
